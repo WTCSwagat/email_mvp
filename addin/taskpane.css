@@ -1,0 +1,119 @@
+body {
+  background: #FFFFFF;
+  color: #1A1A1A;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+
+#header {
+  border-left: 4px solid #FF8200;
+  margin-bottom: 16px;
+  padding-left: 10px;
+}
+
+h1 {
+  color: #1A1A1A;
+  font-size: 16px;
+  margin: 0;
+}
+
+.subtitle {
+  color: #666666;
+  font-size: 12px;
+  margin: 4px 0 0;
+}
+
+#categoryBadge,
+#urgencyBadge {
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0 6px 12px 0;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+#categoryBadge {
+  background: #FF8200;
+  color: #FFFFFF;
+}
+
+.urgency-routine {
+  background: #666666;
+  color: #FFFFFF;
+}
+
+.urgency-urgent {
+  background: #FF8200;
+  color: #FFFFFF;
+}
+
+.urgency-critical {
+  background: #B71C1C;
+  color: #FFFFFF;
+}
+
+#policyText {
+  color: #1A1A1A;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+#policyLink {
+  color: #FF8200;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+#policyLink:hover {
+  text-decoration: underline;
+}
+
+#referralBox {
+  background: #F5F5F5;
+  border-radius: 6px;
+  margin-top: 16px;
+  padding: 12px;
+}
+
+#referralOffice {
+  color: #1A1A1A;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+#referralAction {
+  color: #666666;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+
+#referralLink {
+  color: #FF8200;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+#referralLink:hover {
+  text-decoration: underline;
+}
+
+.hidden {
+  display: none;
+}
+
+#loading {
+  color: #666666;
+  font-size: 13px;
+  font-style: italic;
+}
+
+#error {
+  color: #D32F2F;
+  font-size: 13px;
+}

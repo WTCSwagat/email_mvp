@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Advise Assist</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="taskpane.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="header">
+      <h1>Advise Assist</h1>
+      <p class="subtitle">UTK Policy Lookup</p>
+    </div>
+    <div id="loading">Analyzing email...</div>
+    <div id="result" class="hidden">
+      <div id="categoryBadge"></div>
+      <div id="urgencyBadge"></div>
+      <div id="policyText"></div>
+      <a id="policyLink" href="#" target="_blank">View full UTK policy &rarr;</a>
+      <div id="referralBox">
+        <p id="referralOffice"></p>
+        <p id="referralAction"></p>
+        <a id="referralLink" href="#" target="_blank">Go to office &rarr;</a>
+      </div>
+    </div>
+    <div id="error" class="hidden"></div>
+  </div>
+  <script src="taskpane.js"></script>
+</body>
+</html>
