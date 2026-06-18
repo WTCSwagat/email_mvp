@@ -7,7 +7,7 @@ load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 POLICY_LINKS = {
-    "add_drop": "https://registrar.utk.edu/records/withdrawal/",
+    "add_drop": "https://onestop.utk.edu/registration-records/add-drop-classes/",
     "major_change": "https://catalog.utk.edu/",
     "failing_class": "https://academicsupport.utk.edu/",
     "financial": "https://financialaid.utk.edu/sap/",

@@ -37,10 +37,16 @@ def categorize_email(email_text):
             - urgent
             - critical
 
+            Choose exactly one complexity from:
+            - low
+            - moderate
+            - high
+
             Return exactly this shape:
             {{
             "category": "general",
             "urgency": "routine",
+            "complexity": "moderate",
             "contains_pii": false
             }}
 

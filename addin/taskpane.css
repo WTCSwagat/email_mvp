@@ -1,119 +1,236 @@
+:root {
+  --ink: #1a1a1a;
+  --orange: #ff8200;
+  --orange-dark: #cc6800;
+  --orange-soft: #fff4e8;
+  --muted: #6b6b6b;
+  --border: #e7e7e4;
+  --surface: #f7f7f5;
+  --bg: #ffffff;
+  --red: #b71c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background: #FFFFFF;
-  color: #1A1A1A;
-  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Segoe UI', -apple-system, system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
   margin: 0;
   padding: 16px;
+  -webkit-font-smoothing: antialiased;
 }
 
+#app {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* ---- Header ---- */
 #header {
-  border-left: 4px solid #FF8200;
-  margin-bottom: 16px;
-  padding-left: 10px;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
-h1 {
-  color: #1A1A1A;
-  font-size: 16px;
+.brand-mark {
+  background: var(--orange);
+  border-radius: 4px;
+  flex: none;
+  height: 28px;
+  width: 4px;
+}
+
+.brand-text h1 {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   margin: 0;
 }
 
 .subtitle {
-  color: #666666;
-  font-size: 12px;
-  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  margin: 2px 0 0;
+  text-transform: uppercase;
 }
 
-#categoryBadge,
-#urgencyBadge {
+/* ---- Status pills ---- */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.badge {
   border-radius: 999px;
-  display: inline-block;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  margin: 0 6px 12px 0;
-  padding: 4px 8px;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
   text-transform: uppercase;
 }
 
 #categoryBadge {
-  background: #FF8200;
-  color: #FFFFFF;
+  background: var(--orange-soft);
+  border: 1px solid #ffd9b0;
+  color: var(--orange-dark);
 }
 
 .urgency-routine {
-  background: #666666;
-  color: #FFFFFF;
+  background: #eef0f2;
+  color: #51606e;
 }
 
 .urgency-urgent {
-  background: #FF8200;
-  color: #FFFFFF;
+  background: var(--orange);
+  color: #fff;
 }
 
 .urgency-critical {
-  background: #B71C1C;
-  color: #FFFFFF;
+  background: var(--red);
+  color: #fff;
+}
+
+/* ---- Cards ---- */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  padding: 14px;
+}
+
+.card-label {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
 }
 
 #policyText {
-  color: #1A1A1A;
+  color: var(--ink);
   font-size: 13px;
-  line-height: 1.6;
-  margin-bottom: 12px;
+  line-height: 1.65;
+  margin: 0 0 10px;
 }
 
-#policyLink {
-  color: #FF8200;
-  font-size: 13px;
-  text-decoration: none;
-}
-
-#policyLink:hover {
-  text-decoration: underline;
-}
-
-#referralBox {
-  background: #F5F5F5;
-  border-radius: 6px;
-  margin-top: 16px;
-  padding: 12px;
+.card-referral {
+  background: var(--surface);
+  border-color: #ededea;
 }
 
 #referralOffice {
-  color: #1A1A1A;
-  font-size: 13px;
-  font-weight: 700;
-  margin: 0 0 6px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px;
 }
 
 #referralAction {
-  color: #666666;
-  font-size: 12px;
-  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 0 0 12px;
 }
 
-#referralLink {
-  color: #FF8200;
-  font-size: 12px;
+/* ---- Actions ---- */
+.referral-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+
+.btn-primary {
+  background: var(--orange);
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 9px 14px;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: var(--orange-dark);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:disabled {
+  background: #d9d9d6;
+  cursor: default;
+}
+
+.link {
+  color: var(--orange-dark);
+  font-size: 12.5px;
+  font-weight: 500;
   text-decoration: none;
 }
 
-#referralLink:hover {
+.link:hover {
   text-decoration: underline;
+}
+
+/* ---- States ---- */
+.state {
+  padding: 4px 0;
+}
+
+.loading-text {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 14px 0 0;
+}
+
+#error {
+  background: #fdf0f0;
+  border: 1px solid #f3d2d2;
+  border-radius: 10px;
+  color: var(--red);
+  font-size: 12.5px;
+  padding: 12px 14px;
 }
 
 .hidden {
   display: none;
 }
 
-#loading {
-  color: #666666;
-  font-size: 13px;
-  font-style: italic;
+/* ---- Skeleton ---- */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0ee 25%, #e7e7e4 37%, #f0f0ee 63%);
+  background-size: 400% 100%;
+  border-radius: 8px;
+  animation: shimmer 1.4s ease infinite;
 }
 
-#error {
-  color: #D32F2F;
-  font-size: 13px;
+.skeleton-pills {
+  height: 22px;
+  margin-bottom: 14px;
+  width: 60%;
+}
+
+.skeleton-card {
+  height: 96px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
 }

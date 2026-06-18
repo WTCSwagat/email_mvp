@@ -2,29 +2,60 @@
 <html>
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Advise Assist</title>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <link rel="stylesheet" href="taskpane.css" />
 </head>
 <body>
   <div id="app">
-    <div id="header">
-      <h1>Advise Assist</h1>
-      <p class="subtitle">UTK Policy Lookup</p>
+    <header id="header">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div class="brand-text">
+        <h1>Advise Assist</h1>
+        <p class="subtitle">UTK Policy Lookup</p>
+      </div>
+    </header>
+
+    <!-- Loading skeleton -->
+    <div id="loading" class="state">
+      <div class="skeleton skeleton-pills"></div>
+      <div class="skeleton skeleton-card"></div>
+      <p class="loading-text">Analyzing email&hellip;</p>
     </div>
-    <div id="loading">Analyzing email...</div>
+
+    <!-- Result -->
     <div id="result" class="hidden">
-      <div id="categoryBadge"></div>
-      <div id="urgencyBadge"></div>
-      <div id="policyText"></div>
-      <a id="policyLink" href="#" target="_blank">View full UTK policy &rarr;</a>
-      <div id="referralBox">
+      <div class="pills">
+        <span id="categoryBadge" class="badge"></span>
+        <span id="urgencyBadge" class="badge"></span>
+      </div>
+
+      <section class="card">
+        <p class="card-label">Policy context</p>
+        <p id="policyText"></p>
+        <a id="policyLink" href="#" target="_blank" rel="noopener" class="link">
+          View full UTK policy &rarr;
+        </a>
+      </section>
+
+      <section id="referralBox" class="card card-referral">
+        <p class="card-label">Refer to</p>
         <p id="referralOffice"></p>
         <p id="referralAction"></p>
-        <a id="referralLink" href="#" target="_blank">Go to office &rarr;</a>
-      </div>
+        <div class="referral-actions">
+          <button id="draftReplyBtn" type="button" class="btn-primary">
+            Draft referral reply
+          </button>
+          <a id="referralLink" href="#" target="_blank" rel="noopener" class="link">
+            Office site &rarr;
+          </a>
+        </div>
+      </section>
     </div>
-    <div id="error" class="hidden"></div>
+
+    <!-- Error -->
+    <div id="error" class="hidden state"></div>
   </div>
   <script src="taskpane.js"></script>
 </body>
