@@ -1,5 +1,12 @@
 const BACKEND_URL = "https://arise-destinations-wiley-airline.trycloudflare.com";
 
+// PII-free fields from the last analysis, reused when drafting a reply.
+let lastAnalysis = {
+  category: "general",
+  canonical_question: "",
+  policy_context: "",
+};
+
 Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
     analyzeEmail();
@@ -7,6 +14,9 @@ Office.onReady((info) => {
       Office.EventType.ItemChanged,
       analyzeEmail
     );
+    document
+      .getElementById("draftReplyBtn")
+      .addEventListener("click", draftReferralReply);
   }
 });
 
@@ -36,6 +46,13 @@ async function analyzeEmail() {
       if (!response.ok) throw new Error("Backend error");
       const data = await response.json();
 
+      // Stash PII-free fields for the referral-draft request.
+      lastAnalysis = {
+        category: data.category || "general",
+        canonical_question: data.canonical_question || "",
+        policy_context: (data.context && data.context.text) || "",
+      };
+
       document.getElementById("categoryBadge").innerText = data.category
         .replace("_", "/")
         .toUpperCase();
@@ -53,6 +70,47 @@ async function analyzeEmail() {
       showError("Could not reach backend. Is it running?");
     }
   });
+}
+
+async function draftReferralReply() {
+  const btn = document.getElementById("draftReplyBtn");
+  const originalLabel = btn.innerText;
+  btn.disabled = true;
+  btn.innerText = "Drafting…";
+
+  try {
+    const response = await fetch(`${BACKEND_URL}/draft-reply`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        category: lastAnalysis.category,
+        canonical_question: lastAnalysis.canonical_question,
+        policy_context: lastAnalysis.policy_context,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Draft error");
+    const data = await response.json();
+
+    // Fill placeholders LOCALLY — these names never leave the client.
+    const item = Office.context.mailbox.item;
+    const studentName = (item.from && item.from.displayName) || "there";
+    const advisorName =
+      (Office.context.mailbox.userProfile &&
+        Office.context.mailbox.userProfile.displayName) ||
+      "";
+
+    const draft = (data.draft || "")
+      .replaceAll("[name]", studentName)
+      .replaceAll("[Advisor name]", advisorName);
+
+    item.displayReplyForm({ htmlBody: draft.replace(/\n/g, "<br>") });
+  } catch (err) {
+    showError("Could not draft a reply. Is the backend running?");
+  } finally {
+    btn.disabled = false;
+    btn.innerText = originalLabel;
+  }
 }
 
 function showLoading() {

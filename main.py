@@ -4,9 +4,9 @@ from pydantic import BaseModel
 
 from scrubber import scrub_pii
 from categorize import categorize_email
-from canonical import generate_canonical
+from general_question import generate_canonical
 from context import get_context
-from referral import get_referral
+from referral import get_referral, generate_referral_draft
 
 app = FastAPI()
 
@@ -22,6 +22,13 @@ class EmailRequest(BaseModel):
     email_text: str
     subject: str
     sender: str
+
+
+# Draft requests only carry PII-free fields (never raw email text).
+class DraftRequest(BaseModel):
+    category: str
+    canonical_question: str = ""
+    policy_context: str = ""
 
 
 @app.get("/")
@@ -59,6 +66,18 @@ async def process_email(request: EmailRequest):
         "context": context,
         "referral": referral
     }
+
+@app.post("/draft-reply")
+async def draft_reply(request: DraftRequest):
+    # All inputs here are already PII-free. The draft comes back with
+    # [name] / [Advisor name] placeholders that the add-in fills locally.
+    draft = generate_referral_draft(
+        request.category,
+        request.canonical_question,
+        request.policy_context,
+    )
+    return {"draft": draft}
+
 
 # Run the server
 if __name__ == "__main__":
