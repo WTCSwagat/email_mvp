@@ -6,17 +6,17 @@
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
   xsi:type="MailApp">
   <Id>8e1420f6-b8f3-4d52-a8cc-70d58f7b7554</Id>
-  <Version>1.0.0.1</Version>
+  <Version>1.0.0.2</Version>
   <ProviderName>Advise Assist</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Advise Assist"/>
   <Description DefaultValue="AI-powered policy lookup for academic advisors"/>
-  <IconUrl DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/assets/icon-128.png"/>
-  <SupportUrl DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com"/>
+  <IconUrl DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com"/>
   <AppDomains>
-    <AppDomain>https://settle-cheap-highland-tion.trycloudflare.com</AppDomain>
-    <AppDomain>https://arise-destinations-wiley-airline.trycloudflare.com</AppDomain>
+    <AppDomain>https://zoning-ordering-tahoe-cursor.trycloudflare.com</AppDomain>
+    <AppDomain>https://levels-film-uses-jokes.trycloudflare.com</AppDomain>
 
   </AppDomains>
   <Hosts>
@@ -30,7 +30,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/taskpane.html"/>
+        <SourceLocation DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/taskpane.html"/>
         <RequestedHeight>300</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -77,12 +77,12 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://settle-cheap-highland-tion.trycloudflare.com/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://zoning-ordering-tahoe-cursor.trycloudflare.com/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Advise Assist"/>
