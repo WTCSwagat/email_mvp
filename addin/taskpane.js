@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://levels-film-uses-jokes.trycloudflare.com";
+const BACKEND_URL = "https://advise-assist-api.onrender.com";
 
 // PII-free fields from the last analysis, reused when drafting a reply.
 let lastAnalysis = {
