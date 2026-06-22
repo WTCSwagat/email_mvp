@@ -72,7 +72,7 @@ async def draft_reply(request: DraftRequest):
     # All inputs here are already PII-free. The draft comes back with
     # [name] / [Advisor name] placeholders that the add-in fills locally.
     draft = generate_referral_draft(
-        request.category,
+        request.category, 
         request.canonical_question,
         request.policy_context,
     )

@@ -8,30 +8,33 @@ AI-powered Outlook add-in for academic advisors at UTK. When an advisor opens an
 Outlook (taskpane)
     │
     ▼
-Cloudflare tunnel ──► http-server :3000  (addin/)
+Vercel  ──►  static add-in files (addin/)
+    │         https://email-mvp-roan.vercel.app
     │
-    │  POST /process-email
+    │  POST /process-email, /draft-reply
     ▼
-Cloudflare tunnel ──► FastAPI :8000
+Render  ──►  FastAPI service
+                https://advise-assist-api.onrender.com
                           │
                           ├── scrubber.py   (local PII removal)
                           ├── categorize.py (Groq)
-                          ├── canonical.py  (Groq)
+                          ├── general_question.py (Groq canonical question)
                           ├── context.py    (UTK policy snippets)
-                          └── referral.py   (office routing)
+                          └── referral.py   (office routing + draft generation)
 ```
 
-The frontend and backend each need their own public HTTPS URL. Cloudflare quick tunnels (`trycloudflare.com`) are used for local development so Outlook can reach both services.
+The frontend (static add-in assets) is hosted on **Vercel**. The backend (FastAPI) is hosted on **Render**. Both get stable public HTTPS URLs, so Outlook can reach them without local tunnels.
 
 ## Prerequisites
 
 - Python 3.11+
-- Node.js (for `npx http-server`)
-- [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) (`brew install cloudflared`)
-- A [Groq API key](https://console.groq.com/) they hhave free api key for decent usuage. 
+- Node.js (only needed for local frontend preview)
+- A [Groq API key](https://console.groq.com/) — free tier is fine for decent usage
+- A [Vercel](https://vercel.com/) account (frontend hosting)
+- A [Render](https://render.com/) account (backend hosting)
 - Outlook desktop (Mac or Windows) for sideloading the add-in
 
-## Setup
+## Local development
 
 ### 1. Clone and create a virtual environment
 
@@ -54,50 +57,96 @@ Create a `.env` file in the project root:
 
 ```env
 GROQ_API_KEY=your_groq_api_key_here
+SUPABASE_URL=your_supabase_url_here
+SUPABASE_KEY=your_supabase_key_here
 ```
 
-## Running locally
-
-You need four terminals running at the same time.
-
-**Terminal 1 — Backend**
+### 4. Run the backend locally
 
 ```bash
 source .venv/bin/activate
 python -m uvicorn main:app --reload
 ```
 
-**Terminal 2 — Frontend static server**
+The API is now at `http://127.0.0.1:8000` (interactive docs at `/docs`).
+
+### 5. Preview the frontend locally (optional)
 
 ```bash
 cd addin
 npx http-server -p 3000
 ```
 
-**Terminal 3 — Frontend tunnel**
+For local end-to-end testing against Outlook you can point `BACKEND_URL` in `addin/taskpane.js` at `http://localhost:8000`, but the recommended path is to deploy to Vercel + Render (below), which gives you stable HTTPS URLs Outlook can always reach.
 
-```bash
-cloudflared tunnel --url http://localhost:3000
+## Deployment
+
+### Backend → Render
+
+The repo ships with a `render.yaml` blueprint:
+
+```yaml
+services:
+  - type: web
+    name: advise-assist-api
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python -m spacy download en_core_web_sm"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
 ```
 
-Copy the printed URL (e.g. `https://something.trycloudflare.com`).
+1. Push this repo to GitHub.
+2. In Render, create a **New → Blueprint** and point it at the repo (Render auto-detects `render.yaml`), or create a **Web Service** manually with the build/start commands above.
+3. Set the environment variables in the Render dashboard (these are **not** committed):
+   - `GROQ_API_KEY`
+   - `SUPABASE_URL`
+   - `SUPABASE_KEY`
+4. Deploy. Your backend will be live at a URL like `https://advise-assist-api.onrender.com`.
+5. Verify: `curl https://advise-assist-api.onrender.com/` should return `{ "status": "Advise Assist backend running" }`.
 
-**Terminal 4 — Backend tunnel**
+> Note: Render's free tier spins the service down after inactivity, so the first request after idle can take ~30–60s to wake up.
 
-```bash
-cloudflared tunnel --url http://localhost:8000
+### Frontend → Vercel
+
+The static add-in lives in `addin/` and is configured by `addin/vercel.json`:
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": null,
+  "installCommand": null,
+  "outputDirectory": "."
+}
 ```
 
-Copy the printed URL (e.g. `https://something-else.trycloudflare.com`).
+1. In Vercel, **import the project** from GitHub.
+2. Deploy. The add-in assets are served from a URL like `https://email-mvp-roan.vercel.app`, with files reachable under `/addin/...` (e.g. `/addin/taskpane.html`).
+3. Verify: open `https://email-mvp-roan.vercel.app/addin/taskpane.html` in a browser.
 
-### Update URLs after starting tunnels
+### Wire the two together
 
-Cloudflare quick tunnel URLs change every time you restart `cloudflared`. Update these files with the new URLs (no trailing spaces):
+After both are deployed, make sure the URLs line up (no trailing spaces):
 
-1. **`addin/taskpane.js`** — set `BACKEND_URL` to the backend tunnel URL
-2. **`addin/manifest.xml`** — update all frontend URLs and both `<AppDomain>` entries, then bump `<Version>`
+1. **`addin/taskpane.js`** — set `BACKEND_URL` to your Render URL:
 
-After changing the manifest, remove and re-add the add-in in Outlook so it picks up the new version.
+   ```js
+   const BACKEND_URL = "https://advise-assist-api.onrender.com";
+   ```
+
+2. **`addin/manifest.xml`** — all `<bt:Url>`, `IconUrl`, `SourceLocation`, and icon URLs should point at your Vercel domain, and both backend + frontend domains must be listed under `<AppDomains>`:
+
+   ```xml
+   <AppDomains>
+     <AppDomain>https://email-mvp-roan.vercel.app</AppDomain>
+     <AppDomain>https://advise-assist-api.onrender.com</AppDomain>
+   </AppDomains>
+   ```
+
+3. Whenever you change the manifest, bump `<Version>` and re-sideload the add-in in Outlook so it picks up the new version.
 
 ## Sideloading in Outlook
 
@@ -151,6 +200,26 @@ Health check.
 }
 ```
 
+### `POST /draft-reply`
+
+Generates a student-facing referral reply from PII-free fields. Names stay as `[name]` / `[Advisor name]` placeholders and are filled in locally by the add-in.
+
+**Request body:**
+
+```json
+{
+  "category": "add_drop",
+  "canonical_question": "...",
+  "policy_context": "..."
+}
+```
+
+**Response:**
+
+```json
+{ "draft": "Hi [name], ... Best, [Advisor name]" }
+```
+
 ## Project structure
 
 ```
@@ -160,35 +229,39 @@ email_mvp/
 │   ├── taskpane.html     # Add-in UI
 │   ├── taskpane.js       # Reads email, calls backend
 │   ├── taskpane.css
+│   ├── vercel.json       # Vercel static-hosting config
 │   └── assets/           # Icons
 ├── main.py               # FastAPI app
 ├── scrubber.py           # Local PII scrubbing (spaCy + regex)
 ├── categorize.py         # Email categorization (Groq)
-├── canonical.py          # Canonical question generation (Groq)
+├── general_question.py   # Canonical question generation (Groq)
 ├── context.py            # UTK policy context lookup
-├── referral.py           # Office referral routing
+├── referral.py           # Office referral routing + draft generation
+├── db.py                 # Supabase client
+├── render.yaml           # Render deployment blueprint
 ├── requirements.txt
-└── .env                  # GROQ_API_KEY (not committed)
+└── .env                  # GROQ_API_KEY / SUPABASE_* (not committed)
 ```
 
 ## Troubleshooting
 
 | Symptom | Likely cause |
 |---|---|
-| "Could not reach backend" | Backend tunnel not running, or `BACKEND_URL` in `taskpane.js` is wrong |
+| "Could not reach backend" | Render service is asleep/waking, or `BACKEND_URL` in `taskpane.js` is wrong |
+| First request very slow (~30–60s) | Render free tier cold start — the service spins up on demand |
 | Add-in loads but API call fails | Backend `<AppDomain>` missing or has a trailing space in `manifest.xml` |
 | Manifest changes not applied | Bump `<Version>` and re-sideload the add-in in Outlook |
-| `500 Internal Server Error` on `/process-email` | Check uvicorn terminal for traceback; often a Groq JSON parse issue |
-| Tunnel URL changed | Restarting `cloudflared` generates a new URL — update `taskpane.js` and `manifest.xml` |
+| `500 Internal Server Error` on `/process-email` | Check Render logs for traceback; often a Groq JSON parse issue |
+| Frontend 404 on Vercel | Confirm the path includes `/addin/` (e.g. `/addin/taskpane.html`) |
 
 **Verify the backend is reachable:**
 
 ```bash
-curl https://your-backend-tunnel.trycloudflare.com/
+curl https://advise-assist-api.onrender.com/
 ```
 
 **Verify the frontend is serving the add-in:**
 
 ```bash
-curl https://your-frontend-tunnel.trycloudflare.com/taskpane.html
+curl https://email-mvp-roan.vercel.app/addin/taskpane.html
 ```

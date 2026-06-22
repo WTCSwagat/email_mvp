@@ -57,12 +57,11 @@ def generate_referral_draft(
     """
     referral = get_referral(category)
 
-    tone = (
-        "Use a supportive, caring tone. Gently mention that the UTK Counseling "
-        "Center offers crisis resources and that help is available 24/7."
-        if category == "mental_health"
-        else "Use a warm, professional, encouraging tone."
-    )
+    if category == "mental_health":
+         tone = "Use a supportive, caring tone. Gently mention that the UTK Counseling Center offers crisis resources and that help is available 24/7."
+    else:
+        tone = "Use a warm, professional, encouraging tone."
+    
 
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
