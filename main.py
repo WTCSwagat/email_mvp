@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -17,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# This defines what data comes in 
+# This defines what data comes in
 class EmailRequest(BaseModel):
     email_text: str
     subject: str
@@ -29,6 +30,16 @@ class DraftRequest(BaseModel):
     category: str
     canonical_question: str = ""
     policy_context: str = ""
+
+
+class BatchEmail(BaseModel):
+    id: str
+    subject: str = ""
+    body: str = ""
+
+
+class BatchEmailRequest(BaseModel):
+    emails: list[BatchEmail]
 
 
 @app.get("/")
@@ -66,6 +77,22 @@ async def process_email(request: EmailRequest):
         "context": context,
         "referral": referral
     }
+
+@app.post("/categorize-batch")
+async def categorize_batch(request: BatchEmailRequest):
+    async def process_one(email: BatchEmail):
+        clean_text = await asyncio.to_thread(scrub_pii, email.body)
+        category_data = await asyncio.to_thread(categorize_email, clean_text)
+        return {
+            "id": email.id,
+            "subject": email.subject,
+            "category": category_data.get("category", "general"),
+            "urgency": category_data.get("urgency", "routine"),
+        }
+
+    results = await asyncio.gather(*[process_one(e) for e in request.emails])
+    return {"results": list(results)}
+
 
 @app.post("/draft-reply")
 async def draft_reply(request: DraftRequest):
