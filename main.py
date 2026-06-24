@@ -7,7 +7,8 @@ from categorize import categorize_email
 from general_question import generate_canonical
 from context import get_context
 from referral import get_referral, generate_referral_draft
-
+from judge import judge_context
+from fake_dars import get_dars
 app = FastAPI()
 
 app.add_middleware(
@@ -52,7 +53,15 @@ async def process_email(request: EmailRequest):
     category = category_data.get("category", "general")
     context = get_context(category)
 
-    # Step 4: Get referral
+
+    dars = get_dars(request.sender)
+     # Step 4: Judge if the policy context is enough to answer the question
+
+    judge_data = judge_context(canonical_data.get("canonical_question"), context.get("text"), dars)
+
+
+
+    # Step 5: Get referral
     referral = get_referral(category)
 
     return {
@@ -64,6 +73,11 @@ async def process_email(request: EmailRequest):
         "safe_to_store": canonical_data.get("safe_to_store", False),
         "pii_removed": canonical_data.get("pii_removed", []),
         "context": context,
+        "decision": judge_data.get("decision"),
+        "draft": judge_data.get("draft"),
+        "checklist": judge_data.get("checklist"),
+        "used_record": judge_data.get("used_record"),
+        "dars": dars,
         "referral": referral
     }
 

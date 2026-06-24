@@ -19,39 +19,51 @@
 
     <!-- Loading skeleton -->
     <div id="loading" class="state">
-      <div class="skeleton skeleton-pills"></div>
+      <div class="skeleton skeleton-banner"></div>
       <div class="skeleton skeleton-card"></div>
       <p class="loading-text">Analyzing email&hellip;</p>
     </div>
 
     <!-- Result -->
     <div id="result" class="hidden">
+      <div id="statusBanner" class="banner"><span id="statusText"></span></div>
+
       <div class="pills">
-        <span id="categoryBadge" class="badge"></span>
+        <span id="categoryBadge" class="badge badge-cat"></span>
         <span id="urgencyBadge" class="badge"></span>
       </div>
 
-      <section class="card">
-        <p class="card-label">Policy context</p>
-        <p id="policyText"></p>
-        <a id="policyLink" href="#" target="_blank" rel="noopener" class="link">
-          View full UTK policy &rarr;
-        </a>
+      <section id="darsCard" class="card card-dars hidden">
+        <p class="card-label">Student record &middot; used</p>
+        <p id="darsLine1"></p>
+        <p id="darsLine2"></p>
       </section>
 
-      <section id="referralBox" class="card card-referral">
-        <p class="card-label">Refer to</p>
-        <p id="referralOffice"></p>
-        <p id="referralAction"></p>
-        <div class="referral-actions">
-          <button id="draftReplyBtn" type="button" class="btn-primary">
-            Draft referral reply
-          </button>
-          <a id="referralLink" href="#" target="_blank" rel="noopener" class="link">
-            Office site &rarr;
-          </a>
-        </div>
+      <section id="draftSection" class="hidden">
+        <p class="card-label">Draft reply</p>
+        <div id="draftText" class="draft-box"></div>
       </section>
+
+      <section id="checklistSection" class="card card-checklist hidden">
+        <p class="card-label">Before sending &mdash; check:</p>
+        <ul id="checklistItems"></ul>
+      </section>
+
+      <button id="insertBtn" type="button" class="btn-primary hidden">Insert into reply</button>
+
+      <section id="policySection" class="card hidden">
+        <p class="card-label">Policy (reference)</p>
+        <p id="policyText"></p>
+        <a id="policyLink" href="#" target="_blank" rel="noopener" class="link">View UTK policy &rarr;</a>
+      </section>
+
+      <div id="noDraftNote" class="note hidden">No auto-draft &mdash; this one needs your judgment.</div>
+
+      <div id="feedback" class="feedback">
+        <span class="feedback-q">Was this helpful?</span>
+        <button id="thumbUp" type="button" class="thumb" aria-label="Helpful">&#128077;</button>
+        <button id="thumbDown" type="button" class="thumb" aria-label="Not helpful">&#128078;</button>
+      </div>
     </div>
 
     <!-- Error -->
