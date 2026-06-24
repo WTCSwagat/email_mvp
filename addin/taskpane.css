@@ -105,8 +105,52 @@ body {
 #error { background: #fdf0f0; border: 1px solid #f3d2d2; border-radius: 10px; color: #b71c1c; font-size: 12.5px; padding: 12px 14px; }
 .hidden { display: none; }
 
+/* Categorize Inbox */
+#categorize-section { margin-bottom: 16px; }
+
+.btn-categorize {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 9px 14px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  width: 100%;
+}
+.btn-categorize:hover { background: var(--orange-soft); border-color: var(--orange); color: var(--orange-dark); }
+.btn-categorize:active { transform: translateY(1px); }
+.btn-categorize:disabled { background: #f0f0ee; border-color: var(--border); color: var(--muted); cursor: default; }
+
+.cat-row { align-items: center; display: flex; gap: 8px; padding: 5px 0; }
+.cat-dot { border-radius: 50%; flex: none; height: 10px; width: 10px; }
+.cat-name { color: var(--ink); flex: 1; font-size: 12.5px; font-weight: 500; }
+.cat-count {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  color: var(--muted); font-size: 11px; font-weight: 700; min-width: 22px; padding: 1px 7px; text-align: center;
+}
+.cat-applied { color: #107c10; font-size: 11.5px; font-weight: 600; margin: 8px 0 0; }
+.cat-error {
+  background: #fdf0f0; border: 1px solid #f3d2d2; border-radius: 8px;
+  color: #b71c1c; font-size: 12px; margin-top: 8px; padding: 10px 12px;
+}
+#categorize-results {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; margin-top: 10px; padding: 10px 14px;
+}
+.divider { border: none; border-top: 1px solid var(--border); margin: 0 0 16px; }
+
 /* Skeleton */
-.skeleton { background: linear-gradient(90deg, #f0f0ee 25%, #e7e7e4 37%, #f0f0ee 63%); background-size: 400% 100%; border-radius: 8px; animation: shimmer 1.4s ease infinite; }
+.skeleton {
+  background: linear-gradient(90deg, #f0f0ee 25%, #e7e7e4 37%, #f0f0ee 63%);
+  background-size: 400% 100%;
+  border-radius: 8px;
+  animation: shimmer 1.4s ease infinite;
+}
 .skeleton-banner { height: 30px; margin-bottom: 14px; }
+.skeleton-pills { height: 22px; margin-bottom: 14px; width: 60%; }
 .skeleton-card { height: 90px; }
 @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
