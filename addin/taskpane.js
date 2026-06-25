@@ -13,6 +13,38 @@ const CATEGORY_DISPLAY = {
 // The current email's draft, already hydrated with the real names, ready to insert.
 let hydratedDraft = "";
 
+// ─── Microsoft Graph auth (MSAL popup) ───────────────────────────────────────
+// Personal outlook.com accounts can't use Office SSO, so we sign in with an MSAL
+// popup once and call Graph directly. The token is cached in localStorage.
+const MSAL_CONFIG = {
+  auth: {
+    clientId: "6373ddfb-fa04-41a7-9053-e8111df6ad9d",
+    authority: "https://login.microsoftonline.com/consumers",
+    redirectUri: "https://email-mvp-roan.vercel.app/addin/fallbackauth.html",
+  },
+  cache: { cacheLocation: "localStorage" },
+};
+const GRAPH_SCOPES = ["Mail.ReadWrite"];
+const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
+let msalInstance = null;
+
+async function getGraphToken() {
+  if (!msalInstance) {
+    msalInstance = new msal.PublicClientApplication(MSAL_CONFIG);
+  }
+  const account = msalInstance.getAllAccounts()[0];
+  if (account) {
+    try {
+      const r = await msalInstance.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
+      return r.accessToken;
+    } catch (e) {
+      // fall through to interactive popup
+    }
+  }
+  const r = await msalInstance.loginPopup({ scopes: GRAPH_SCOPES });
+  return r.accessToken;
+}
+
 Office.onReady((info) => {
   if (info.host === Office.HostType.Outlook) {
     analyzeEmail();
@@ -161,18 +193,17 @@ async function categorizeInbox() {
   showCategorizeLoading();
 
   try {
-    // Step 1: get REST token
-    const token = await getRestToken();
-    const restUrl = Office.context.mailbox.restUrl;
+    // Step 1: get a Graph token (MSAL popup on first use, cached after)
+    const token = await getGraphToken();
 
     // Step 2: fetch 25 inbox messages (body as plain text)
-    const messages = await fetchInboxMessages(restUrl, token, 25);
+    const messages = await fetchInboxMessages(token, 25);
 
     // Step 3: batch-categorize via backend
     const emailPayload = messages.map((m) => ({
-      id: m.Id,
-      subject: m.Subject || "",
-      body: (m.Body && m.Body.Content) || "",
+      id: m.id,
+      subject: m.subject || "",
+      body: (m.body && m.body.content) || "",
     }));
 
     const catResponse = await fetch(`${BACKEND_URL}/categorize-batch`, {
@@ -184,9 +215,9 @@ async function categorizeInbox() {
     const catData = await catResponse.json();
 
     // Step 4: ensure Outlook master categories exist, then tag each email
-    await ensureOutlookCategories(restUrl, token);
+    await ensureOutlookCategories(token);
     await Promise.all(
-      catData.results.map((r) => applyOutlookCategory(restUrl, token, r.id, r.category))
+      catData.results.map((r) => applyOutlookCategory(token, r.id, r.category))
     );
 
     // Step 5: render summary
@@ -200,22 +231,10 @@ async function categorizeInbox() {
   }
 }
 
-function getRestToken() {
-  return new Promise((resolve, reject) => {
-    Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, (result) => {
-      if (result.status === Office.AsyncResultStatus.Succeeded) {
-        resolve(result.value);
-      } else {
-        reject(new Error("Could not get mailbox access token."));
-      }
-    });
-  });
-}
-
-async function fetchInboxMessages(restUrl, token, count) {
+async function fetchInboxMessages(token, count) {
   const url =
-    `${restUrl}/v2.0/me/MailFolders/Inbox/Messages` +
-    `?$top=${count}&$select=Id,Subject,Body`;
+    `${GRAPH_BASE}/me/mailFolders/inbox/messages` +
+    `?$top=${count}&$select=id,subject,body`;
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -227,9 +246,9 @@ async function fetchInboxMessages(restUrl, token, count) {
   return data.value || [];
 }
 
-async function ensureOutlookCategories(restUrl, token) {
+async function ensureOutlookCategories(token) {
   // Fetch existing master categories
-  const listResp = await fetch(`${restUrl}/v2.0/me/outlook/masterCategories`, {
+  const listResp = await fetch(`${GRAPH_BASE}/me/outlook/masterCategories`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   const existingNames = new Set();
@@ -242,7 +261,7 @@ async function ensureOutlookCategories(restUrl, token) {
   await Promise.all(
     Object.values(CATEGORY_DISPLAY).map(async ({ name, color }) => {
       if (existingNames.has(name)) return;
-      await fetch(`${restUrl}/v2.0/me/outlook/masterCategories`, {
+      await fetch(`${GRAPH_BASE}/me/outlook/masterCategories`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -254,15 +273,15 @@ async function ensureOutlookCategories(restUrl, token) {
   );
 }
 
-async function applyOutlookCategory(restUrl, token, messageId, category) {
+async function applyOutlookCategory(token, messageId, category) {
   const catInfo = CATEGORY_DISPLAY[category] || CATEGORY_DISPLAY.general;
-  await fetch(`${restUrl}/v2.0/me/Messages/${messageId}`, {
+  await fetch(`${GRAPH_BASE}/me/messages/${messageId}`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ Categories: [catInfo.name] }),
+    body: JSON.stringify({ categories: [catInfo.name] }),
   });
 }
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Signing in&hellip;</title>
+  <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+</head>
+<body>
+  <p style="font-family: sans-serif; color: #444;">Signing you in&hellip; this window will close automatically.</p>
+  <script>
+    // This page is the MSAL redirect target (registered as the SPA redirect URI).
+    // Loading MSAL here lets the popup hand the token back to the task pane.
+    const pca = new msal.PublicClientApplication({
+      auth: {
+        clientId: "6373ddfb-fa04-41a7-9053-e8111df6ad9d",
+        authority: "https://login.microsoftonline.com/consumers",
+        redirectUri: "https://email-mvp-roan.vercel.app/addin/fallbackauth.html",
+      },
+      cache: { cacheLocation: "localStorage" },
+    });
+    pca.handleRedirectPromise().catch(function (e) { console.error(e); });
+  </script>
+</body>
+</html>

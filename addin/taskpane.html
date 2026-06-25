@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Advise Assist</title>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
   <link rel="stylesheet" href="taskpane.css" />
 </head>
 <body>
@@ -17,10 +18,9 @@
       </div>
     </header>
 
-    <!-- Categorize Inbox action — hidden for demo: relies on the legacy Outlook
-         REST token API, which is disabled on personal accounts. Revive with a
-         Graph + SSO rewrite later. -->
-    <div id="categorize-section" class="hidden">
+    <!-- Categorize Inbox action — tags every inbox email with an Outlook color
+         category via Microsoft Graph (MSAL popup sign-in on first use). -->
+    <div id="categorize-section">
       <button id="categorizeInboxBtn" type="button" class="btn-categorize">
         Categorize Inbox
       </button>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="divider hidden"></div>
+    <div class="divider"></div>
 
     <!-- Loading skeleton -->
     <div id="loading" class="state">

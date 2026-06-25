@@ -6,7 +6,7 @@
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
   xsi:type="MailApp">
   <Id>8e1420f6-b8f3-4d52-a8cc-70d58f7b7554</Id>
-  <Version>1.0.0.4</Version>
+  <Version>1.0.0.5</Version>
   <ProviderName>Advise Assist</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Advise Assist"/>
@@ -17,7 +17,8 @@
   <AppDomains>
     <AppDomain>https://email-mvp-roan.vercel.app</AppDomain>
     <AppDomain>https://advise-assist-api.onrender.com</AppDomain>
-
+    <AppDomain>https://login.microsoftonline.com</AppDomain>
+    <AppDomain>https://alcdn.msauth.net</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Mailbox"/>
