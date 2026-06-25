@@ -9,9 +9,12 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def safe_parse(text):
     match = re.search(r'\{.*\}', text, re.DOTALL)
-    if match:
+    if not match:
+        return {}
+    try:
         return json.loads(match.group())
-    return {}
+    except json.JSONDecodeError:
+        return {}
 #this funciton just prototype so fix this in detail later 
 
 def generate_canonical(email_text):

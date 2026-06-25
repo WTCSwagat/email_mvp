@@ -58,8 +58,10 @@ async function analyzeEmail() {
 function render(data, item) {
   const decision = (data.decision || "no").toLowerCase();
 
-  // Names are filled in LOCALLY — they never went to the model.
-  const studentName = (item.from && item.from.displayName) || "there";
+  // Student name comes from the matched DARS record (emails are seeded into one
+  // mailbox, so the "From" address is the same for all of them).
+  const studentName =
+    (data.dars && data.dars.name) || (item.from && item.from.displayName) || "there";
   const advisorName =
     (Office.context.mailbox.userProfile && Office.context.mailbox.userProfile.displayName) || "";
   hydratedDraft = (data.draft || "")

@@ -51,24 +51,30 @@ def root():
 @app.post("/process-email")
 async def process_email(request: EmailRequest):
 
-    # Scrub PII locally before anything touches Groq.
-    clean_text = scrub_pii(request.email_text)
+    # Demo: skip PII scrubbing so the model sees the full email (fake data → richer answers).
+    # Production keeps scrub_pii here; bypassed for the demo only.
+    clean_text = request.email_text
 
-    # Step 1: Categorize (redacted text only)
+    # Step 1: Categorize
     category_data = categorize_email(clean_text)
 
-    # Step 2: Generate canonical question (redacted text only)
+    # Step 2: Generate canonical question (kept for the response/analytics)
     canonical_data = generate_canonical(clean_text)
 
     # Step 3: Surface relevant policy context
     category = category_data.get("category", "general")
     context = get_context(category)
 
+    # Step 4: Match the student's DARS record by the NAME in the email text
+    # (NOT scrubbed — a separate trusted input).
+    dars = get_dars(clean_text)
 
-    dars = get_dars(request.sender)
-     # Step 4: Judge if the policy context is enough to answer the question
-
-    judge_data = judge_context(canonical_data.get("canonical_question"), context.get("text"), dars)
+    # Step 5: Judge + draft. Mental-health emails are NEVER auto-drafted —
+    # they need the advisor's personal response.
+    if category == "mental_health":
+        judge_data = {"decision": "no", "draft": "", "checklist": [], "used_record": dars is not None}
+    else:
+        judge_data = judge_context(clean_text, context.get("text"), dars)
 
 
 

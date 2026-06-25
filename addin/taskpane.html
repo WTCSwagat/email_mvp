@@ -17,8 +17,10 @@
       </div>
     </header>
 
-    <!-- Categorize Inbox action -->
-    <div id="categorize-section">
+    <!-- Categorize Inbox action — hidden for demo: relies on the legacy Outlook
+         REST token API, which is disabled on personal accounts. Revive with a
+         Graph + SSO rewrite later. -->
+    <div id="categorize-section" class="hidden">
       <button id="categorizeInboxBtn" type="button" class="btn-categorize">
         Categorize Inbox
       </button>
@@ -37,7 +39,7 @@
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider hidden"></div>
 
     <!-- Loading skeleton -->
     <div id="loading" class="state">
