@@ -10,6 +10,7 @@ from context import get_context
 from referral import get_referral, generate_referral_draft
 from judge import judge_context
 from fake_dars import get_dars
+from demo_answers import get_demo_answer
 app = FastAPI()
 
 app.add_middleware(
@@ -50,6 +51,29 @@ def root():
 
 @app.post("/process-email")
 async def process_email(request: EmailRequest):
+
+    # Demo fast-path: a known demo email returns its canned perfect answer with NO
+    # LLM calls — deterministic, no API-key / rate-limit / cold-start risk. Novel
+    # emails fall through to the live AI pipeline below.
+    canned = get_demo_answer(request.subject)
+    if canned:
+        dars = get_dars(request.email_text)
+        return {
+            "category": canned["category"],
+            "urgency": canned["urgency"],
+            "complexity": "moderate",
+            "contains_pii": False,
+            "canonical_question": None,
+            "safe_to_store": False,
+            "pii_removed": [],
+            "context": canned["context"],
+            "decision": canned["decision"],
+            "draft": canned["draft"],
+            "checklist": canned["checklist"],
+            "used_record": dars is not None,
+            "dars": dars,
+            "referral": get_referral(canned["category"]),
+        }
 
     # Demo: skip PII scrubbing so the model sees the full email (fake data → richer answers).
     # Production keeps scrub_pii here; bypassed for the demo only.
