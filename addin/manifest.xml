@@ -5,8 +5,8 @@
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
   xsi:type="MailApp">
-  <Id>8e1420f6-b8f3-4d52-a8cc-70d58f7b7554</Id>
-  <Version>1.0.0.5</Version>
+  <Id>57166ac7-dd2d-4f16-84f1-b256c1cabf16</Id>
+  <Version>1.0.0.7</Version>
   <ProviderName>Advise Assist</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Advise Assist"/>
@@ -93,42 +93,5 @@
         <bt:String id="ButtonDescription" DefaultValue="Open AI-powered policy lookup for academic advising emails."/>
       </bt:LongStrings>
     </Resources>
-    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
-      <Requirements>
-        <bt:Sets DefaultMinVersion="1.5">
-          <bt:Set Name="Mailbox"/>
-        </bt:Sets>
-      </Requirements>
-      <Hosts>
-        <Host xsi:type="MailHost">
-          <DesktopFormFactor>
-            <FunctionFile resid="Taskpane.Url"/>
-            <ExtensionPoint xsi:type="MessageReadCommandSurface">
-              <OfficeTab id="TabDefault">
-                <Group id="msgReadGroup">
-                  <Label resid="GroupLabel"/>
-                  <Control xsi:type="Button" id="msgReadOpenPaneButton">
-                    <Label resid="ButtonLabel"/>
-                    <Supertip>
-                      <Title resid="ButtonLabel"/>
-                      <Description resid="ButtonDescription"/>
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="Icon.16x16"/>
-                      <bt:Image size="32" resid="Icon.32x32"/>
-                      <bt:Image size="80" resid="Icon.80x80"/>
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="Taskpane.Url"/>
-                      <SupportsPinning>true</SupportsPinning>
-                    </Action>
-                  </Control>
-                </Group>
-              </OfficeTab>
-            </ExtensionPoint>
-          </DesktopFormFactor>
-        </Host>
-      </Hosts>
-    </VersionOverrides>
   </VersionOverrides>
 </OfficeApp>
