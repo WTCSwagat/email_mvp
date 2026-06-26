@@ -272,6 +272,256 @@ DEMO_ANSWERS = {
             "Incomplete, handled case-by-case with the instructor and the Dean of Students. "
             "This needs the advisor's judgment."),
     },
+
+    # ── Nadia Osei — AP credit not posted ──────────────────────────────────────
+    "AP credit not showing up": {
+        "category": "general", "urgency": "routine", "decision": "partly",
+        "draft": (
+            "Hi Nadia,\n\nGood catch. A score of 4 on AP Chemistry does earn UTK credit "
+            "(it generally maps to CHEM 120), but it only posts once the official College "
+            "Board score report reaches our Admissions/Registrar office — a self-reported "
+            "score on your application isn't enough. Right now I don't see any AP credit on "
+            "your record, which usually means the official report hasn't arrived.\n\nThe "
+            "fix is to log in to College Board (apscores.org) and send your official scores "
+            "to the University of Tennessee, Knoxville. Once it's processed, the credit "
+            "should appear on your DARS. Want me to double-check it landed in a couple "
+            "weeks?\n\nBest,\n[Advisor name]"
+        ),
+        "checklist": ["Have the student send official AP scores from College Board to UTK",
+                      "Re-check DARS after processing to confirm the credit posted"],
+        "context": _ctx("general",
+            "AP credit is awarded per the UTK AP credit chart once an OFFICIAL College "
+            "Board score report is received; self-reported scores do not post credit."),
+    },
+
+    # ── Ethan Brooks — grade replacement / course repeat ───────────────────────
+    "Retaking a class I failed": {
+        "category": "general", "urgency": "routine", "decision": "yes",
+        "draft": (
+            "Hi Ethan,\n\nGood news on this one. Under UTK's course-repeat (grade-"
+            "replacement) policy, when you retake MATH 141 the most recent grade is the one "
+            "that counts in your GPA — so a passing grade would replace the F in the GPA "
+            "calculation. The original attempt still appears on your transcript marked as "
+            "repeated; it just stops dragging your GPA down.\n\nA couple of things to know: "
+            "grade replacement applies to a limited number of repeats, so it's worth "
+            "confirming MATH 141 is eligible before you register. Retaking it should give "
+            "your GPA a solid lift. Want me to help you fit it into next term's "
+            "schedule?\n\nBest,\n[Advisor name]"
+        ),
+        "checklist": ["Confirm MATH 141 is within the allowed grade-replacement limit with One Stop"],
+        "context": _ctx("general",
+            "UTK's course-repeat policy counts the most recent grade in the GPA for an "
+            "allowed number of repeats; the original grade remains on the transcript "
+            "marked as repeated."),
+    },
+
+    # ── Fatima Hassan — incomplete grade request ───────────────────────────────
+    "Requesting an incomplete": {
+        "category": "general", "urgency": "urgent", "decision": "partly",
+        "draft": (
+            "Hi Fatima,\n\nI'm so sorry you're dealing with this — let's look at your "
+            "options. An Incomplete ('I') can be a good fit, but it has conditions: it's "
+            "meant for students who have completed most of the course and just need more "
+            "time to finish the remaining work because of circumstances like yours, and it "
+            "requires your instructor's agreement on what's left and a deadline to "
+            "finish.\n\nThe first step is talking with each instructor about where you "
+            "stand in their class. If an Incomplete isn't the right fit, there may be other "
+            "paths (like a hardship withdrawal), and the Dean of Students can help with "
+            "documentation. Can we meet this week to figure out the best route?\n\nBest,\n"
+            "[Advisor name]"
+        ),
+        "checklist": ["Student to discuss remaining work and a deadline with each instructor",
+                      "If an Incomplete won't work, explore a hardship withdrawal via the Dean of Students"],
+        "context": _ctx("general",
+            "An Incomplete is granted at the instructor's discretion when most coursework "
+            "is done and the rest can be finished by an agreed deadline; documented "
+            "hardships may alternatively qualify for a withdrawal."),
+    },
+
+    # ── Derek Simmons — academic probation ─────────────────────────────────────
+    "Got a letter about academic probation": {
+        "category": "failing_class", "urgency": "urgent", "decision": "partly",
+        "draft": (
+            "Hi Derek,\n\nThanks for reaching out — probation sounds scarier than it is, "
+            "and it's very recoverable. It means your cumulative GPA dropped below the 2.0 "
+            "minimum (yours is currently 1.85). You're still enrolled; it's essentially a "
+            "warning with some guardrails. To return to good standing you'll need to raise "
+            "your cumulative GPA back to 2.0+, and the university usually asks for an "
+            "academic-recovery plan — sometimes with a cap on credit hours so you can focus."
+            "\n\nLet's meet to build that plan: pick the right course load, line up tutoring "
+            "through the Student Success Center, and map how many terms it'll take to get "
+            "back above 2.0. You can absolutely turn this around.\n\nBest,\n[Advisor name]"
+        ),
+        "checklist": ["Meet to build an academic-recovery plan",
+                      "Connect with Student Success Center tutoring",
+                      "Consider a reduced credit load for the recovery term"],
+        "context": _ctx("failing_class",
+            "A cumulative GPA below 2.0 results in academic probation. Returning to good "
+            "standing requires raising the cumulative GPA to 2.0+, often via a recovery "
+            "plan and academic support."),
+    },
+
+    # ── Leila Park — credit overload ───────────────────────────────────────────
+    "Can I take 21 credit hours?": {
+        "category": "add_drop", "urgency": "routine", "decision": "yes",
+        "draft": (
+            "Hi Leila,\n\nGreat ambition — and yes, this is doable for you. The standard "
+            "full-time load is up to 18 hours; anything above that (your 21) is an overload "
+            "and needs advisor/college approval, which typically requires a GPA around 3.0 "
+            "or higher. Your 3.72 clears that easily, so approval should be a formality.\n\n"
+            "One honest note: 21 hours is a heavy term, so let's make sure the mix isn't all "
+            "your hardest courses at once. If you stop by I can approve the overload and we "
+            "can sanity-check the schedule against your early-graduation goal.\n\nBest,\n"
+            "[Advisor name]"
+        ),
+        "checklist": ["Process the overload approval (GPA requirement met)",
+                      "Review course mix so the 21-hour term is balanced"],
+        "context": _ctx("add_drop",
+            "Loads above 18 hours are overloads requiring advisor/college approval and "
+            "generally a minimum GPA (around 3.0). Standard full-time is 12-18 hours."),
+    },
+
+    # ── Owen Murphy — graduation check ─────────────────────────────────────────
+    "Am I on track to graduate in May?": {
+        "category": "general", "urgency": "routine", "decision": "partly",
+        "draft": (
+            "Hi Owen,\n\nExciting — you're close! By the numbers you're on track: 108 hours "
+            "completed plus 12 in progress puts you right at the 120 you need. Two things "
+            "make it official, though. First, you have to file your graduation application "
+            "by the posted deadline for the May ceremony — graduation isn't automatic. "
+            "Second, let's run a final degree audit together to confirm there are no "
+            "lingering requirements (a specific gen-ed, an upper-division hour count, etc.) "
+            "hiding in the details.\n\nWant to set up a graduation check this week so we can "
+            "file the application and clear you for May?\n\nBest,\n[Advisor name]"
+        ),
+        "checklist": ["File the graduation application before the posted deadline",
+                      "Complete a final degree audit to confirm all requirements are met"],
+        "context": _ctx("general",
+            "Graduating requires filing a graduation application by the deadline and "
+            "passing a final degree audit confirming all requirements are complete."),
+    },
+
+    # ── Simone Grant — second major ────────────────────────────────────────────
+    "Adding a second major": {
+        "category": "major_change", "urgency": "routine", "decision": "partly",
+        "draft": (
+            "Hi Simone,\n\nLove that you want to do both — adding Political Science as a "
+            "second major is absolutely possible. It's declared through the Political "
+            "Science advising office, and you'd complete the requirements for both majors "
+            "to graduate. The main thing to plan for is time: depending on how much overlap "
+            "there is with your Economics requirements and gen-eds, a second major can add "
+            "a semester or two.\n\nSince you're a sophomore, you're at a great point to map "
+            "this out before it affects your timeline. Want to meet so we can sketch a "
+            "combined four-year plan and then set you up with a PoliSci advisor?\n\nBest,\n"
+            "[Advisor name]"
+        ),
+        "checklist": ["Declare the second major through the Political Science advising office",
+                      "Map a combined plan to see the effect on graduation timeline"],
+        "context": _ctx("major_change",
+            "A second major is declared through that department; all requirements for both "
+            "majors must be completed, which can extend the time to graduate."),
+    },
+
+    # ── Aiden Flores — minor declaration ───────────────────────────────────────
+    "How do I add a minor?": {
+        "category": "major_change", "urgency": "routine", "decision": "yes",
+        "draft": (
+            "Hi Aiden,\n\nHappy to help — adding a Spanish minor is one of the easier "
+            "things to set up. You declare it through the Spanish department (in Modern "
+            "Foreign Languages); they'll add it to your degree plan. A minor usually runs "
+            "about 15-18 hours.\n\nWhether it pushes your graduation back really depends on "
+            "overlap: some of those Spanish courses can double-count toward your "
+            "electives or gen-ed requirements, in which case it adds little or nothing. If "
+            "you want, send me your remaining requirements and I'll show you how the minor "
+            "fits into your remaining electives.\n\nBest,\n[Advisor name]"
+        ),
+        "checklist": [],
+        "context": _ctx("major_change",
+            "A minor (typically 15-18 hours) is declared through the offering department; "
+            "courses that overlap with electives or gen-eds may limit any added time."),
+    },
+
+    # ── Brianna Scott — waitlist ───────────────────────────────────────────────
+    "Stuck on waitlist for a required class": {
+        "category": "add_drop", "urgency": "urgent", "decision": "partly",
+        "draft": (
+            "Hi Brianna,\n\nBeing #6 isn't bad, but let's not leave it to luck. Waitlists "
+            "clear automatically as enrolled students drop, and movement is usually best in "
+            "the last days before the term and the first week of add/drop — so keep an eye "
+            "on it during that window. There's no guarantee you'll reach the top, though, "
+            "so let's line up backups.\n\nOptions: enroll in another required course now so "
+            "your schedule stays full, watch for a second section of PSYC 301 opening, or "
+            "I can reach out to the instructor about an overfill since it's required for "
+            "your major. Want me to email the department on your behalf?\n\nBest,\n"
+            "[Advisor name]"
+        ),
+        "checklist": ["Enroll in a backup required course to keep the schedule full",
+                      "Ask the instructor/department about an overfill for a required course"],
+        "context": _ctx("add_drop",
+            "Waitlists clear automatically as seats open, with the most movement near the "
+            "term start; there is no guarantee of placement, so backups are advised."),
+    },
+
+    # ── Lucas Reyes — study abroad + aid ───────────────────────────────────────
+    "Study abroad and my financial aid": {
+        "category": "financial", "urgency": "routine", "decision": "partly",
+        "draft": (
+            "Hi Lucas,\n\nGreat idea, and the answer is mostly yes — with some planning. "
+            "For UTK-sponsored and exchange programs, your federal aid and most "
+            "institutional aid generally still apply, since you stay enrolled at UTK. The "
+            "amount can shift on some programs, so the Programs Abroad office plus One Stop "
+            "can give you exact figures for the program you pick.\n\nOn credit: study-abroad "
+            "courses can count toward your degree, but only if they're pre-approved before "
+            "you go — that step is what protects your graduation timeline. Let's meet to "
+            "match courses to your remaining requirements and get them approved, then loop "
+            "in Programs Abroad. \n\nBest,\n[Advisor name]"
+        ),
+        "checklist": ["Confirm aid amounts for the specific program with One Stop / Programs Abroad",
+                      "Get courses pre-approved to count toward the degree before departure"],
+        "context": _ctx("financial",
+            "On UTK-sponsored/exchange programs federal and most institutional aid "
+            "typically still applies; study-abroad courses count toward the degree only "
+            "when pre-approved."),
+    },
+
+    # ── Imani Walker — grade dispute (needs advisor judgment) ───────────────────
+    "Disputing a final grade": {
+        "category": "general", "urgency": "urgent", "decision": "no",
+        "draft": "",
+        "checklist": ["Have the student first contact the instructor to ask how the grade was calculated",
+                      "If unresolved, escalate to the department head, then the college, within deadlines",
+                      "Help the student document their graded work and the timeline"],
+        "context": _ctx("general",
+            "UTK has a formal grade-appeal process: the student must start with the "
+            "instructor, then escalate to the department head and college within published "
+            "deadlines. This needs the advisor to guide it, not an auto-reply."),
+    },
+
+    # ── Linda Carter (parent) — FERPA: must NOT share the student's records ─────
+    "My son's grades": {
+        "category": "general", "urgency": "urgent", "decision": "partly",
+        "draft": (
+            "Hi Ms. Carter,\n\nThank you for reaching out, and I completely understand your "
+            "concern for Marcus. I do want to help, so I want to be upfront about what I "
+            "can and can't do. Under a federal privacy law called FERPA, the university "
+            "isn't able to share a student's academic records — grades, enrollment, or "
+            "standing — with a parent without the student's written consent, even when a "
+            "family is supporting them through school.\n\nThe good news is there's an easy "
+            "path: Marcus can file a FERPA release authorizing us to discuss his records "
+            "with you, and then I'd be glad to talk specifics. In the meantime, I'd "
+            "encourage you to keep reaching out to him, and I'll also make a note to connect "
+            "with him directly to check in. Please don't hesitate to ask about general "
+            "resources I *can* share, like tutoring and the counseling center.\n\nBest,\n"
+            "[Advisor name]"
+        ),
+        "checklist": ["Do NOT share grades/standing without a signed FERPA release on file",
+                      "Point the parent to the FERPA release the student can file",
+                      "Consider reaching out to the student directly to check in"],
+        "context": _ctx("general",
+            "FERPA prohibits disclosing a student's education records to a parent without "
+            "the student's written consent, even if the parent pays tuition. Direct the "
+            "parent to the student-signed FERPA release process."),
+    },
 }
 
 

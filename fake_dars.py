@@ -149,6 +149,147 @@ DARS = {
     "Casey Nguyen":  {"student_id": "000490011", "credits_completed": 24, "credits_in_progress": 14, "gpa": 3.00, "major": "Undecided", "holds": []},
     "Morgan Diaz":   {"student_id": "000495533", "credits_completed": 18, "credits_in_progress": 12, "gpa": 2.80, "major": "Sociology, B.A.", "holds": []},
     "Chris Taylor":  {"student_id": "000467314", "credits_completed": 70, "credits_in_progress": 9,  "gpa": 2.40, "major": "History, B.A.", "holds": []},
+
+    # ─── New students (added incrementally) ─────────────────────────────────────
+    "Nadia Osei": {   'credits_completed': 14,
+    'credits_in_progress': 15,
+    'gpa': 3.55,
+    'holds': [],
+    'major': 'Chemistry, B.S.',
+    'note': 'AP Chemistry score of 4 self-reported, but no AP credit is currently posted to her '
+            'record. UTK awards CHEM 120 credit for an AP Chemistry score of 4+, but only after an '
+            'official College Board score report is received by the Admissions/Registrar office.',
+    'standing': 'Freshman',
+    'student_id': '000501224'},
+
+    "Ethan Brooks": {   'completed_courses': [{'code': 'MATH 141', 'credits': 4, 'grade': 'F', 'title': 'Calculus I'}],
+    'credits_completed': 38,
+    'credits_in_progress': 13,
+    'gpa': 2.34,
+    'holds': [],
+    'major': 'Economics, B.A.',
+    'note': "Failed MATH 141 last term. Eligible for UTK's course-repeat / grade-replacement "
+            'policy: on an allowed repeat the most recent grade is the one counted in the GPA, '
+            'while the original attempt stays on the transcript marked as repeated. Repeats are '
+            'limited in number.',
+    'standing': 'Sophomore',
+    'student_id': '000498771'},
+
+    "Fatima Hassan": {   'credits_completed': 64,
+    'credits_in_progress': 15,
+    'gpa': 3.18,
+    'holds': [],
+    'major': 'Sociology, B.A.',
+    'note': "Strong record but reporting serious family hardship this term. An Incomplete ('I') is "
+            'granted only when most of the coursework is done and the remaining work can be '
+            "finished by a set deadline, and it requires the instructor's agreement — it is not "
+            'automatic.',
+    'standing': 'Junior',
+    'student_id': '000496310'},
+
+    "Derek Simmons": {   'credits_completed': 42,
+    'credits_in_progress': 13,
+    'gpa': 1.85,
+    'holds': [],
+    'major': 'Business Administration, B.S.',
+    'note': 'Cumulative GPA of 1.85 is below the 2.0 minimum, which is why he was placed on '
+            'academic probation. Returning to good standing means raising the cumulative GPA to '
+            '2.0+, usually with an academic-recovery plan and a possible cap on credit hours.',
+    'standing': 'Sophomore',
+    'student_id': '000493882'},
+
+    "Leila Park": {   'credits_completed': 70,
+    'credits_in_progress': 15,
+    'gpa': 3.72,
+    'holds': [],
+    'major': 'Computer Science, B.S.',
+    'note': 'High GPA (3.72). Standard full-time load is up to 18 hours; an overload to 19-21 '
+            'hours requires advisor/college approval and typically a GPA at or above ~3.0 — she '
+            'comfortably qualifies.',
+    'standing': 'Junior',
+    'student_id': '000502907'},
+
+    "Owen Murphy": {   'credits_completed': 108,
+    'credits_in_progress': 12,
+    'expected_graduation': 'Spring 2026',
+    'gpa': 3.3,
+    'holds': [],
+    'major': 'History, B.A.',
+    'note': 'On track by hours (108 + 12 in progress, toward 120). To graduate in May he must file '
+            'the graduation application by the posted deadline and complete a final degree audit '
+            'with his advisor to confirm no remaining requirements are outstanding.',
+    'standing': 'Senior',
+    'student_id': '000455901'},
+
+    "Simone Grant": {   'credits_completed': 46,
+    'credits_in_progress': 15,
+    'gpa': 3.21,
+    'holds': [],
+    'major': 'Economics, B.A.',
+    'note': 'Wants to add Political Science as a second major. Adding a second major is allowed; '
+            "it is declared through the second department's advising office and both sets of "
+            'requirements must be completed, which can affect the graduation timeline.',
+    'standing': 'Sophomore',
+    'student_id': '000504113'},
+
+    "Aiden Flores": {   'credits_completed': 60,
+    'credits_in_progress': 15,
+    'gpa': 3.05,
+    'holds': [],
+    'major': 'Marketing, B.S.',
+    'note': 'Wants to add a Spanish minor. Declaring a minor is straightforward — done through the '
+            "minor's department — and a minor is typically 15-18 hours; whether it delays "
+            'graduation depends on overlap with existing requirements and remaining electives.',
+    'standing': 'Junior',
+    'student_id': '000500447'},
+
+    "Brianna Scott": {   'credits_completed': 66,
+    'credits_in_progress': 15,
+    'gpa': 3.4,
+    'holds': [],
+    'major': 'Psychology, B.A.',
+    'note': '#6 on the waitlist for PSYC 301, a required major course. Waitlists clear '
+            'automatically as enrolled students drop; there is no guarantee. Backup options '
+            'include another required course this term, a different PSYC 301 section, or '
+            'instructor permission to overfill.',
+    'standing': 'Junior',
+    'student_id': '000499205'},
+
+    "Lucas Reyes": {   'credits_completed': 48,
+    'credits_in_progress': 15,
+    'gpa': 3.28,
+    'holds': [],
+    'major': 'International Business, B.S.',
+    'note': 'Considering study abroad next fall. On UTK-sponsored/exchange programs federal and '
+            'most institutional aid generally still applies, and courses can count toward the '
+            'degree if pre-approved — both must be arranged ahead through the Programs Abroad '
+            'office and the advisor.',
+    'standing': 'Sophomore',
+    'student_id': '000497740'},
+
+    "Imani Walker": {   'credits_completed': 68,
+    'credits_in_progress': 15,
+    'gpa': 3.36,
+    'holds': [],
+    'major': 'Communications, B.A.',
+    'note': 'Disputing a final grade she believes was miscalculated. UTK has a formal grade-appeal '
+            'procedure: the student must first contact the instructor, then escalate to the '
+            'department head and college if unresolved, within published deadlines. This needs the '
+            'advisor to guide the process, not an auto-reply.',
+    'standing': 'Junior',
+    'student_id': '000494418'},
+
+    "Marcus Carter": {   'credits_completed': 40,
+    'credits_in_progress': 14,
+    'gpa': 2.05,
+    'holds': [],
+    'major': 'Mechanical Engineering, B.S.',
+    'note': 'Parent (Linda Carter) is asking for his grades. FERPA prohibits disclosing a '
+            "student's education records to a parent without the student's written consent, even "
+            'when the parent pays tuition. The advisor can see this record but cannot share it '
+            'with the parent.',
+    'standing': 'Sophomore',
+    'student_id': '000506622'}
 }
 
 

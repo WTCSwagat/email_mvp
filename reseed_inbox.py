@@ -210,10 +210,10 @@ def delete_one_message(page):
   delete_selected(page)
 
 
-def get_inbox_subjects(page):
-  """Return subject lines already in the inbox (best-effort scan of visible rows)."""
+def get_inbox_row_blobs(page):
+  """Return searchable text blobs for each visible inbox row."""
   go_to_inbox(page)
-  subjects = set()
+  blobs = []
   rows = message_rows(page)
   count = min(rows.count(), 100)
   for i in range(count):
@@ -221,32 +221,28 @@ def get_inbox_subjects(page):
       row = rows.nth(i)
       label = (row.get_attribute("aria-label") or "").strip()
       text = (row.inner_text(timeout=2000) or "").strip()
-      for raw in (label, text.split("\n")[0] if text else ""):
-        if not raw:
-          continue
-        # aria-label often embeds the subject after the sender name.
-        for candidate in re.split(r"[\n,]", raw):
-          candidate = candidate.strip()
-          if len(candidate) > 3:
-            subjects.add(candidate)
+      blob = f"{label}\n{text}".strip()
+      if blob:
+        blobs.append(blob.lower())
     except Exception:
       continue
-  return subjects
+  return blobs
+
+
+def subject_in_inbox(subject, row_blobs):
+  needle = subject.lower()
+  return any(needle in blob for blob in row_blobs)
 
 
 def emails_to_send(page, add_only):
   if not add_only:
     return list(FAKE_EMAILS)
-  existing = get_inbox_subjects(page)
+  row_blobs = get_inbox_row_blobs(page)
   pending = []
   for email in FAKE_EMAILS:
     subject = email["subject"]
-    if subject in existing:
+    if subject_in_inbox(subject, row_blobs):
       print(f"  skip (already in inbox): {subject}")
-      continue
-    # Fuzzy: subject appears inside a row label/text blob.
-    if any(subject in blob for blob in existing):
-      print(f"  skip (likely present): {subject}")
       continue
     pending.append(email)
   return pending
