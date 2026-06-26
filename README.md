@@ -2,6 +2,26 @@
 
 AI-powered Outlook add-in for academic advisors at UTK. When an advisor opens an email, the add-in reads the message, scrubs PII locally, categorizes the request with Groq, and surfaces relevant UTK policy context and referral guidance.
 
+## Try the demo (for teammates / testers)
+
+You don't need to clone or build anything — the add-in is already deployed. To try it:
+
+**Requirements (important):**
+- Use a **personal outlook.com account** — the add-in's Microsoft sign-in is registered for personal accounts only (work/school accounts won't work).
+- Use **Outlook on the web in Chrome** — *not* the desktop app (category tags lag behind there) and *not* Safari (it blocks the sign-in popup).
+- For the full experience, sign into the **shared demo mailbox** (`advise.assist@outlook.com`), which is seeded with 27 fake student emails. On your own mailbox the polished canned answers only fire for those exact demo subjects.
+
+**Steps:**
+1. Open [outlook.com](https://outlook.com) in **Chrome** and sign into the demo mailbox.
+2. Settings (gear) → search "add-in" → **Manage add-ins** → **My add-ins** → **Custom Addins** → **+ Add a custom add-in** → **Add from file**.
+3. Upload `addin/manifest.xml` from this repo → **Install**.
+4. Open any student email → click **Advise Assist** in the message toolbar (or the `···` / Apps menu) → you'll see the category, urgency, a pre-drafted reply, and the student's DARS record.
+5. Click **Categorize Inbox** → approve the Microsoft sign-in once → the whole inbox gets sorted and color-tagged. Switch Outlook to **Arrange by: Categories** to see the grouped view.
+
+**Heads-up:**
+- The backend runs on Render's free tier and **sleeps after ~15 min idle**. The first click after idle can show "Failed to fetch" / "could not reach backend" for ~30–60s while it wakes — just wait and click again. (A keep-warm pinger avoids this for live demos.)
+- The pane **updates automatically** when you select a different email, but it does **not stay pinned** open across emails (pinning isn't supported on personal accounts) — reopen it per email.
+
 ## Architecture
 
 ```
