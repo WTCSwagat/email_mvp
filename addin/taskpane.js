@@ -196,14 +196,17 @@ async function categorizeInbox() {
   hideCategorizeResults();
   showCategorizeLoading();
 
+  let step = "sign-in";
   try {
     // Step 1: get a Graph token (Office sign-in dialog on first use, cached after)
     const token = await getGraphToken();
 
     // Step 2: fetch 25 inbox messages (body as plain text)
+    step = "reading inbox";
     const messages = await fetchInboxMessages(token, 25);
 
     // Step 3: batch-categorize via backend
+    step = "categorizing";
     const emailPayload = messages.map((m) => ({
       id: m.id,
       subject: m.subject || "",
@@ -220,7 +223,9 @@ async function categorizeInbox() {
 
     // Step 4: ensure Outlook master categories exist, then tag each email
     // (in small batches with retries so none get silently dropped to throttling).
+    step = "creating categories";
     await ensureOutlookCategories(token);
+    step = "tagging emails";
     const failed = await applyCategoriesInBatches(token, catData.results);
 
     // Step 5: render summary
@@ -229,7 +234,7 @@ async function categorizeInbox() {
       showCategorizeError(`${failed} email${failed > 1 ? "s" : ""} couldn't be tagged — click Categorize Inbox again to retry.`);
     }
   } catch (err) {
-    showCategorizeError(err.message || "Could not categorize inbox.");
+    showCategorizeError(`(${step}) ${err.message || "Could not categorize inbox."}`);
   } finally {
     btn.disabled = false;
     btn.innerText = "Categorize Inbox";
