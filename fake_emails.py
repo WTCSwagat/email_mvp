@@ -1,12 +1,16 @@
-"""15 fake student emails for seeding the demo inbox.
+"""27 fake student emails for seeding the demo inbox.
 
 Each body STARTS with the student's name so the backend can detect which student
 it is (get_dars in fake_dars.py scans the text for a known name). This matters
 because browser-seeded emails all arrive from one address, so we match on the
 NAME in the body, not the sender address.
 
-Every name has a matching record in fake_dars.py. Mental-health emails are kept
-to two and are NOT auto-drafted (handled in main.py).
+Every email has a matching DARS record (fake_dars.py) AND a canned answer keyed by
+subject (demo_answers.py) — so the whole inbox runs deterministically on the demo
+branch with no LLM calls. Mental-health emails are kept to two and are NOT
+auto-drafted (handled in main.py). The last email is a FERPA case: a parent asking
+for grades; the body names the son (Marcus Carter), whose record the advisor may
+see but must not disclose without the student's written consent.
 """
 
 FAKE_EMAILS = [
@@ -123,9 +127,10 @@ FAKE_EMAILS = [
     "body": "Hi, my name is Imani Walker. I believe my professor calculated my final grade incorrectly — I should have gotten a B but got a D. I have all my graded work saved. How do I formally dispute this?"},
 
     # ---- Ferpa Issues -> Just added for now
-    {"name": "Linda Carter (parent)", 
-    "sender": "lindacarter1972@gmail.com", 
-    "subject": "My son's grades", 
+    {"name": "Linda Carter (parent)",
+    "sender": "lindacarter1972@gmail.com",
+    "scenario": "FERPA (parent request)",
+    "subject": "My son's grades",
     "body": "Hi, my name is Linda Carter and I'm the mother of Marcus Carter, a sophomore at UTK. Marcus hasn't been returning my calls and I'm very worried about him. His father and I are paying for his tuition and we just want to know if he's passing his classes and if everything is okay. Can you please tell me how he's doing academically? I don't understand why this information would be kept from his own parents."},
 
 ]
