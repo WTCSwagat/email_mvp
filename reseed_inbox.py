@@ -1,12 +1,14 @@
-"""Clear the Outlook inbox and re-seed it from fake_emails.py.
+"""Seed the Outlook inbox from fake_emails.py.
 
 All emails are sent FROM and TO advise.assist@outlook.com so they land in the
 inbox. Login / 2FA is manual.
 
 Usage:
-    python reseed_inbox.py
+    python reseed_inbox.py              # wipe inbox, send all (full reseed)
+    python reseed_inbox.py --add-only   # keep existing mail; send missing subjects only
 """
 
+import argparse
 import re
 import sys
 import time
@@ -208,6 +210,48 @@ def delete_one_message(page):
   delete_selected(page)
 
 
+def get_inbox_subjects(page):
+  """Return subject lines already in the inbox (best-effort scan of visible rows)."""
+  go_to_inbox(page)
+  subjects = set()
+  rows = message_rows(page)
+  count = min(rows.count(), 100)
+  for i in range(count):
+    try:
+      row = rows.nth(i)
+      label = (row.get_attribute("aria-label") or "").strip()
+      text = (row.inner_text(timeout=2000) or "").strip()
+      for raw in (label, text.split("\n")[0] if text else ""):
+        if not raw:
+          continue
+        # aria-label often embeds the subject after the sender name.
+        for candidate in re.split(r"[\n,]", raw):
+          candidate = candidate.strip()
+          if len(candidate) > 3:
+            subjects.add(candidate)
+    except Exception:
+      continue
+  return subjects
+
+
+def emails_to_send(page, add_only):
+  if not add_only:
+    return list(FAKE_EMAILS)
+  existing = get_inbox_subjects(page)
+  pending = []
+  for email in FAKE_EMAILS:
+    subject = email["subject"]
+    if subject in existing:
+      print(f"  skip (already in inbox): {subject}")
+      continue
+    # Fuzzy: subject appears inside a row label/text blob.
+    if any(subject in blob for blob in existing):
+      print(f"  skip (likely present): {subject}")
+      continue
+    pending.append(email)
+  return pending
+
+
 def clear_inbox(page):
   go_to_inbox(page)
   deleted = 0
@@ -386,7 +430,14 @@ def fail(page, phase, detail, exc):
 
 
 def main():
-  total = len(FAKE_EMAILS)
+  parser = argparse.ArgumentParser(description="Seed the demo Outlook inbox.")
+  parser.add_argument(
+    "--add-only",
+    action="store_true",
+    help="Do not clear the inbox; send only subjects not already present.",
+  )
+  args = parser.parse_args()
+
   with sync_playwright() as p:
     context = p.chromium.launch_persistent_context(
       user_data_dir=str(PROFILE_DIR),
@@ -399,19 +450,28 @@ def main():
 
     wait_for_login(page)
 
-    # Phase 1 — clear inbox
-    print("\n--- Phase 1: clear inbox ---")
-    try:
-      deleted = clear_inbox(page)
-    except Exception as exc:
-      fail(page, "clear_inbox", "could not empty the inbox", exc)
-      context.close()
-      sys.exit(1)
+    deleted = 0
+    if args.add_only:
+      print("\n--- add-only mode: keeping existing inbox mail ---")
+    else:
+      print("\n--- Phase 1: clear inbox ---")
+      try:
+        deleted = clear_inbox(page)
+      except Exception as exc:
+        fail(page, "clear_inbox", "could not empty the inbox", exc)
+        context.close()
+        sys.exit(1)
 
-    # Phase 2 — send current fake_emails.py set
-    print("\n--- Phase 2: send emails ---")
+    to_send = emails_to_send(page, args.add_only)
+    total = len(to_send)
+    if total == 0:
+      print("\nNothing to send — inbox already has all subjects from fake_emails.py.")
+      context.close()
+      return
+
+    print(f"\n--- Phase 2: send {total} email(s) ---")
     sent = 0
-    for idx, email in enumerate(FAKE_EMAILS, start=1):
+    for idx, email in enumerate(to_send, start=1):
       try:
         send_one(page, idx, total, email)
         sent += 1
@@ -420,7 +480,8 @@ def main():
         fail(page, "send", f"email {idx}/{total}: {email['subject']!r}", exc)
         break
 
-    print(f"\nDone. Deleted {deleted} old message(s), sent {sent}/{total} "
+    mode = "add-only" if args.add_only else "full reseed"
+    print(f"\nDone ({mode}). Deleted {deleted} old message(s), sent {sent}/{total} "
           f"to {RECIPIENT}.")
     print("Leaving the browser open for 10s so you can verify...")
     page.wait_for_timeout(10000)
