@@ -270,25 +270,41 @@ async function ensureOutlookCategories(token) {
 
   // Create missing categories, and FIX the color on any that already exist with
   // the wrong color — Outlook pre-creates categories grey, so without this they'd
-  // never pick up our intended preset color.
-  await Promise.all(
-    Object.values(CATEGORY_DISPLAY).map(async ({ name, color }) => {
-      const cur = existing[name];
-      if (!cur) {
-        await fetch(`${GRAPH_BASE}/me/outlook/masterCategories`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ displayName: name, color }),
-        });
-      } else if (cur.color !== color) {
-        await fetch(`${GRAPH_BASE}/me/outlook/masterCategories/${cur.id}`, {
-          method: "PATCH",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ color }),
-        });
-      }
-    })
-  );
+  // never pick up our intended preset color. Done ONE AT A TIME with retries: the
+  // masterCategories endpoint throttles hard, so firing all at once left most grey.
+  for (const { name, color } of Object.values(CATEGORY_DISPLAY)) {
+    const cur = existing[name];
+    if (!cur) {
+      await categoryWrite(`${GRAPH_BASE}/me/outlook/masterCategories`, "POST", { displayName: name, color }, token);
+    } else if (cur.color !== color) {
+      await categoryWrite(`${GRAPH_BASE}/me/outlook/masterCategories/${cur.id}`, "PATCH", { color }, token);
+    }
+  }
+}
+
+// Create/update a master category, retrying on throttling (429) or transient errors.
+async function categoryWrite(url, method, body, token, attempt = 0) {
+  try {
+    const resp = await fetch(url, {
+      method,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (resp.ok) return true;
+    if ((resp.status === 429 || resp.status >= 500) && attempt < 4) {
+      const ra = parseInt(resp.headers.get("Retry-After"), 10);
+      const waitMs = Number.isFinite(ra) ? ra * 1000 : 400 * 2 ** attempt;
+      await new Promise((r) => setTimeout(r, waitMs));
+      return categoryWrite(url, method, body, token, attempt + 1);
+    }
+    return false;
+  } catch (e) {
+    if (attempt < 4) {
+      await new Promise((r) => setTimeout(r, 400 * 2 ** attempt));
+      return categoryWrite(url, method, body, token, attempt + 1);
+    }
+    return false;
+  }
 }
 
 // Tag emails in small concurrent batches (not all at once) so Graph doesn't
