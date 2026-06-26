@@ -219,13 +219,15 @@ async function categorizeInbox() {
     const catData = await catResponse.json();
 
     // Step 4: ensure Outlook master categories exist, then tag each email
+    // (in small batches with retries so none get silently dropped to throttling).
     await ensureOutlookCategories(token);
-    await Promise.all(
-      catData.results.map((r) => applyOutlookCategory(token, r.id, r.category))
-    );
+    const failed = await applyCategoriesInBatches(token, catData.results);
 
     // Step 5: render summary
     renderCategorySummary(catData.results);
+    if (failed > 0) {
+      showCategorizeError(`${failed} email${failed > 1 ? "s" : ""} couldn't be tagged — click Categorize Inbox again to retry.`);
+    }
   } catch (err) {
     showCategorizeError(err.message || "Could not categorize inbox.");
   } finally {
@@ -277,16 +279,48 @@ async function ensureOutlookCategories(token) {
   );
 }
 
-async function applyOutlookCategory(token, messageId, category) {
+// Tag emails in small concurrent batches (not all at once) so Graph doesn't
+// throttle us. Returns how many ultimately failed after retries.
+async function applyCategoriesInBatches(token, results, batchSize = 4) {
+  let failed = 0;
+  for (let i = 0; i < results.length; i += batchSize) {
+    const slice = results.slice(i, i + batchSize);
+    const outcomes = await Promise.all(
+      slice.map((r) => applyOutlookCategory(token, r.id, r.category))
+    );
+    failed += outcomes.filter((ok) => !ok).length;
+  }
+  return failed;
+}
+
+// Apply one category. Returns true on success; retries on throttling (429) or
+// transient server/network errors with backoff. Returns false if it gives up.
+async function applyOutlookCategory(token, messageId, category, attempt = 0) {
   const catInfo = CATEGORY_DISPLAY[category] || CATEGORY_DISPLAY.general;
-  await fetch(`${GRAPH_BASE}/me/messages/${messageId}`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ categories: [catInfo.name] }),
-  });
+  try {
+    const resp = await fetch(`${GRAPH_BASE}/me/messages/${messageId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ categories: [catInfo.name] }),
+    });
+    if (resp.ok) return true;
+    if ((resp.status === 429 || resp.status >= 500) && attempt < 3) {
+      const retryAfter = parseInt(resp.headers.get("Retry-After"), 10);
+      const waitMs = Number.isFinite(retryAfter) ? retryAfter * 1000 : 500 * 2 ** attempt;
+      await new Promise((r) => setTimeout(r, waitMs));
+      return applyOutlookCategory(token, messageId, category, attempt + 1);
+    }
+    return false;
+  } catch (e) {
+    if (attempt < 3) {
+      await new Promise((r) => setTimeout(r, 500 * 2 ** attempt));
+      return applyOutlookCategory(token, messageId, category, attempt + 1);
+    }
+    return false;
+  }
 }
 
 function renderCategorySummary(results) {
