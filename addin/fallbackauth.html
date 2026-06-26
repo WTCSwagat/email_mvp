@@ -23,7 +23,7 @@
       },
       cache: { cacheLocation: "localStorage" },
     };
-    var SCOPES = ["Mail.ReadWrite"];
+    var SCOPES = ["Mail.ReadWrite", "MailboxSettings.ReadWrite"];
 
     function sendToParent(obj) {
       Office.onReady(function () {
