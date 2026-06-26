@@ -3,22 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <title>Signing in&hellip;</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <script src="msal-browser.min.js"></script>
 </head>
 <body>
-  <p style="font-family: sans-serif; color: #444;">Signing you in&hellip; this window will close automatically.</p>
+  <p style="font-family: sans-serif; color: #444; padding: 16px;">Signing you in&hellip;</p>
   <script>
-    // This page is the MSAL redirect target (registered as the SPA redirect URI).
-    // Loading MSAL here lets the popup hand the token back to the task pane.
-    const pca = new msal.PublicClientApplication({
+    // Runs inside an Office dialog opened by the task pane. MSAL does an
+    // interactive redirect here (a real window, so it's not blocked), then we
+    // hand the access token back to the pane via messageParent.
+    var MSAL_CONFIG = {
       auth: {
         clientId: "6373ddfb-fa04-41a7-9053-e8111df6ad9d",
         authority: "https://login.microsoftonline.com/consumers",
         redirectUri: "https://email-mvp-roan.vercel.app/addin/fallbackauth.html",
       },
       cache: { cacheLocation: "localStorage" },
+    };
+    var SCOPES = ["Mail.ReadWrite"];
+    var pca = new msal.PublicClientApplication(MSAL_CONFIG);
+
+    function sendToParent(obj) {
+      Office.onReady(function () {
+        Office.context.ui.messageParent(JSON.stringify(obj));
+      });
+    }
+
+    pca.handleRedirectPromise().then(function (resp) {
+      if (resp && resp.accessToken) {
+        sendToParent({ token: resp.accessToken });
+        return;
+      }
+      var account = pca.getAllAccounts()[0];
+      if (account) {
+        pca.acquireTokenSilent({ scopes: SCOPES, account: account })
+          .then(function (r) { sendToParent({ token: r.accessToken }); })
+          .catch(function () { pca.loginRedirect({ scopes: SCOPES }); });
+      } else {
+        pca.loginRedirect({ scopes: SCOPES });
+      }
+    }).catch(function (e) {
+      sendToParent({ error: (e && e.message) || String(e) });
     });
-    pca.handleRedirectPromise().catch(function (e) { console.error(e); });
   </script>
 </body>
 </html>

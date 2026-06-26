@@ -13,36 +13,40 @@ const CATEGORY_DISPLAY = {
 // The current email's draft, already hydrated with the real names, ready to insert.
 let hydratedDraft = "";
 
-// ─── Microsoft Graph auth (MSAL popup) ───────────────────────────────────────
-// Personal outlook.com accounts can't use Office SSO, so we sign in with an MSAL
-// popup once and call Graph directly. The token is cached in localStorage.
-const MSAL_CONFIG = {
-  auth: {
-    clientId: "6373ddfb-fa04-41a7-9053-e8111df6ad9d",
-    authority: "https://login.microsoftonline.com/consumers",
-    redirectUri: "https://email-mvp-roan.vercel.app/addin/fallbackauth.html",
-  },
-  cache: { cacheLocation: "localStorage" },
-};
-const GRAPH_SCOPES = ["Mail.ReadWrite"];
+// ─── Microsoft Graph auth (Office Dialog + MSAL) ─────────────────────────────
+// Personal outlook.com accounts can't use Office SSO, and an MSAL popup
+// (window.open) is blocked inside the task-pane iframe. So we open the sign-in
+// in an Office dialog (fallbackauth.html) that runs MSAL and sends the token
+// back via messageParent. The token is cached in memory for the session.
 const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
-let msalInstance = null;
+const AUTH_DIALOG_URL = "https://email-mvp-roan.vercel.app/addin/fallbackauth.html";
+let cachedGraphToken = null;
 
-async function getGraphToken() {
-  if (!msalInstance) {
-    msalInstance = new msal.PublicClientApplication(MSAL_CONFIG);
-  }
-  const account = msalInstance.getAllAccounts()[0];
-  if (account) {
-    try {
-      const r = await msalInstance.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
-      return r.accessToken;
-    } catch (e) {
-      // fall through to interactive popup
-    }
-  }
-  const r = await msalInstance.loginPopup({ scopes: GRAPH_SCOPES });
-  return r.accessToken;
+function getGraphToken() {
+  if (cachedGraphToken) return Promise.resolve(cachedGraphToken);
+  return new Promise((resolve, reject) => {
+    Office.context.ui.displayDialogAsync(
+      AUTH_DIALOG_URL,
+      { height: 60, width: 30, promptBeforeOpen: false },
+      (result) => {
+        if (result.status !== Office.AsyncResultStatus.Succeeded) {
+          reject(new Error("Could not open the sign-in window."));
+          return;
+        }
+        const dialog = result.value;
+        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
+          dialog.close();
+          let msg;
+          try { msg = JSON.parse(arg.message); } catch (e) { reject(new Error("Sign-in failed.")); return; }
+          if (msg.token) { cachedGraphToken = msg.token; resolve(msg.token); }
+          else { reject(new Error(msg.error || "Sign-in failed.")); }
+        });
+        dialog.addEventHandler(Office.EventType.DialogEventReceived, () => {
+          reject(new Error("Sign-in window was closed before completing."));
+        });
+      }
+    );
+  });
 }
 
 Office.onReady((info) => {
@@ -193,7 +197,7 @@ async function categorizeInbox() {
   showCategorizeLoading();
 
   try {
-    // Step 1: get a Graph token (MSAL popup on first use, cached after)
+    // Step 1: get a Graph token (Office sign-in dialog on first use, cached after)
     const token = await getGraphToken();
 
     // Step 2: fetch 25 inbox messages (body as plain text)
