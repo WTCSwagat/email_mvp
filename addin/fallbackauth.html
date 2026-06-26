@@ -7,11 +7,14 @@
   <script src="msal-browser.min.js"></script>
 </head>
 <body>
-  <p style="font-family: sans-serif; color: #444; padding: 16px;">Signing you in&hellip;</p>
+  <pre id="status" style="font-family: sans-serif; font-size: 14px; color: #444; padding: 16px; white-space: pre-wrap;">Starting&hellip;</pre>
   <script>
     // Runs inside an Office dialog opened by the task pane. MSAL does an
     // interactive redirect here (a real window, so it's not blocked), then we
     // hand the access token back to the pane via messageParent.
+    var statusEl = document.getElementById("status");
+    function show(t) { statusEl.textContent = t; }
+
     var MSAL_CONFIG = {
       auth: {
         clientId: "6373ddfb-fa04-41a7-9053-e8111df6ad9d",
@@ -21,30 +24,48 @@
       cache: { cacheLocation: "localStorage" },
     };
     var SCOPES = ["Mail.ReadWrite"];
-    var pca = new msal.PublicClientApplication(MSAL_CONFIG);
 
     function sendToParent(obj) {
       Office.onReady(function () {
-        Office.context.ui.messageParent(JSON.stringify(obj));
+        try { Office.context.ui.messageParent(JSON.stringify(obj)); }
+        catch (e) { show("messageParent failed: " + ((e && e.message) || e)); }
       });
     }
 
-    pca.handleRedirectPromise().then(function (resp) {
-      if (resp && resp.accessToken) {
-        sendToParent({ token: resp.accessToken });
-        return;
-      }
-      var account = pca.getAllAccounts()[0];
-      if (account) {
-        pca.acquireTokenSilent({ scopes: SCOPES, account: account })
-          .then(function (r) { sendToParent({ token: r.accessToken }); })
-          .catch(function () { pca.loginRedirect({ scopes: SCOPES }); });
-      } else {
-        pca.loginRedirect({ scopes: SCOPES });
-      }
-    }).catch(function (e) {
-      sendToParent({ error: (e && e.message) || String(e) });
-    });
+    // On error: show it on screen, keep the dialog open ~10s so it can be read,
+    // then notify the pane.
+    function fail(stage, e) {
+      var msg = (e && (e.errorCode ? e.errorCode + ": " : "") + (e.message || e.errorMessage)) || String(e);
+      show("ERROR at " + stage + ":\n\n" + msg + "\n\n(this window closes in 10s)");
+      setTimeout(function () { sendToParent({ error: stage + ": " + msg }); }, 10000);
+    }
+
+    try {
+      var pca = new msal.PublicClientApplication(MSAL_CONFIG);
+      show("Checking sign-in…");
+      pca.handleRedirectPromise().then(function (resp) {
+        if (resp && resp.accessToken) {
+          show("Signed in. Returning to add-in…");
+          sendToParent({ token: resp.accessToken });
+          return;
+        }
+        var account = pca.getAllAccounts()[0];
+        if (account) {
+          show("Refreshing token…");
+          pca.acquireTokenSilent({ scopes: SCOPES, account: account })
+            .then(function (r) { sendToParent({ token: r.accessToken }); })
+            .catch(function () {
+              show("Redirecting to Microsoft sign-in…");
+              pca.loginRedirect({ scopes: SCOPES }).catch(function (e) { fail("loginRedirect", e); });
+            });
+        } else {
+          show("Redirecting to Microsoft sign-in…");
+          pca.loginRedirect({ scopes: SCOPES }).catch(function (e) { fail("loginRedirect", e); });
+        }
+      }).catch(function (e) { fail("handleRedirectPromise", e); });
+    } catch (e) {
+      fail("init", e);
+    }
   </script>
 </body>
 </html>
