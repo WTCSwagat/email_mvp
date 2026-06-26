@@ -253,28 +253,35 @@ async function fetchInboxMessages(token, count) {
 }
 
 async function ensureOutlookCategories(token) {
-  // Fetch existing master categories
+  // Fetch existing master categories as name -> {id, color}.
   const listResp = await fetch(`${GRAPH_BASE}/me/outlook/masterCategories`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  const existingNames = new Set();
+  const existing = {};
   if (listResp.ok) {
     const listData = await listResp.json();
-    (listData.value || []).forEach((c) => existingNames.add(c.displayName));
+    (listData.value || []).forEach((c) => { existing[c.displayName] = c; });
   }
 
-  // Create any that are missing
+  // Create missing categories, and FIX the color on any that already exist with
+  // the wrong color — Outlook pre-creates categories grey, so without this they'd
+  // never pick up our intended preset color.
   await Promise.all(
     Object.values(CATEGORY_DISPLAY).map(async ({ name, color }) => {
-      if (existingNames.has(name)) return;
-      await fetch(`${GRAPH_BASE}/me/outlook/masterCategories`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ displayName: name, color }),
-      });
+      const cur = existing[name];
+      if (!cur) {
+        await fetch(`${GRAPH_BASE}/me/outlook/masterCategories`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ displayName: name, color }),
+        });
+      } else if (cur.color !== color) {
+        await fetch(`${GRAPH_BASE}/me/outlook/masterCategories/${cur.id}`, {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ color }),
+        });
+      }
     })
   );
 }
