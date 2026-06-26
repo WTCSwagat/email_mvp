@@ -6,6 +6,7 @@ inbox. Login / 2FA is manual.
 Usage:
     python reseed_inbox.py              # wipe inbox, send all (full reseed)
     python reseed_inbox.py --add-only   # keep existing mail; send missing subjects only
+    python reseed_inbox.py --new-only   # send only the emails appended after the original 15
 """
 
 import argparse
@@ -425,6 +426,9 @@ def fail(page, phase, detail, exc):
   print("=" * 70 + "\n")
 
 
+ORIGINAL_EMAIL_COUNT = 15
+
+
 def main():
   parser = argparse.ArgumentParser(description="Seed the demo Outlook inbox.")
   parser.add_argument(
@@ -432,7 +436,15 @@ def main():
     action="store_true",
     help="Do not clear the inbox; send only subjects not already present.",
   )
+  parser.add_argument(
+    "--new-only",
+    action="store_true",
+    help=f"Do not clear the inbox; send only FAKE_EMAILS[{ORIGINAL_EMAIL_COUNT}:] (the appended scenarios).",
+  )
   args = parser.parse_args()
+
+  if args.add_only and args.new_only:
+    parser.error("use --add-only or --new-only, not both")
 
   with sync_playwright() as p:
     context = p.chromium.launch_persistent_context(
@@ -447,8 +459,9 @@ def main():
     wait_for_login(page)
 
     deleted = 0
-    if args.add_only:
-      print("\n--- add-only mode: keeping existing inbox mail ---")
+    if args.add_only or args.new_only:
+      label = "new-only" if args.new_only else "add-only"
+      print(f"\n--- {label} mode: keeping existing inbox mail ---")
     else:
       print("\n--- Phase 1: clear inbox ---")
       try:
@@ -458,7 +471,11 @@ def main():
         context.close()
         sys.exit(1)
 
-    to_send = emails_to_send(page, args.add_only)
+    if args.new_only:
+      to_send = FAKE_EMAILS[ORIGINAL_EMAIL_COUNT:]
+      print(f"  sending {len(to_send)} appended email(s) (indices {ORIGINAL_EMAIL_COUNT}+)")
+    else:
+      to_send = emails_to_send(page, args.add_only)
     total = len(to_send)
     if total == 0:
       print("\nNothing to send — inbox already has all subjects from fake_emails.py.")
@@ -476,7 +493,7 @@ def main():
         fail(page, "send", f"email {idx}/{total}: {email['subject']!r}", exc)
         break
 
-    mode = "add-only" if args.add_only else "full reseed"
+    mode = "new-only" if args.new_only else ("add-only" if args.add_only else "full reseed")
     print(f"\nDone ({mode}). Deleted {deleted} old message(s), sent {sent}/{total} "
           f"to {RECIPIENT}.")
     print("Leaving the browser open for 10s so you can verify...")
