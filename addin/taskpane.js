@@ -7,7 +7,7 @@ const CATEGORY_DISPLAY = {
   failing_class: { name: "Failing Class", color: "preset0",  hex: "#d13438" },
   financial:     { name: "Financial Aid", color: "preset3",  hex: "#986f0b" },
   mental_health: { name: "Mental Health", color: "preset4",  hex: "#107c10" },
-  general:       { name: "General",       color: "preset12", hex: "#69797e" },
+  general:       { name: "General",       color: "preset10", hex: "#4a6572" },
 };
 
 // The current email's draft, already hydrated with the real names, ready to insert.
