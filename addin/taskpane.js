@@ -203,7 +203,7 @@ async function categorizeInbox() {
 
     // Step 2: fetch 25 inbox messages (body as plain text)
     step = "reading inbox";
-    const messages = await fetchInboxMessages(token, 25);
+    const messages = await fetchInboxMessages(token, 50);
 
     // Step 3: batch-categorize via backend
     step = "categorizing";
