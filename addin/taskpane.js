@@ -123,10 +123,7 @@ function render(data, item) {
 
   // DARS card — only when the student record was used
   if (data.used_record && data.dars) {
-    const d = data.dars;
-    const holds = (d.holds && d.holds.length) ? d.holds.join(", ") : "no holds";
-    document.getElementById("darsLine1").innerText = `${studentName} · ${d.major || ""}`;
-    document.getElementById("darsLine2").innerText = `${d.credits_in_progress} cr · ${d.gpa} GPA · ${holds}`;
+    renderDarsCard(data.dars, studentName);
     show("darsCard");
   } else {
     hide("darsCard");
@@ -171,6 +168,63 @@ function render(data, item) {
 
   hide("loading");
   show("result");
+}
+
+const DEGREE_HOURS = 120;
+
+function renderDarsCard(d, studentName) {
+  // Hold badge — only when there's an active hold
+  const holdEl = document.getElementById("darsHold");
+  if (d.holds && d.holds.length) {
+    holdEl.innerText = `\u{1F512} ${d.holds.join(", ")}`;
+    holdEl.classList.remove("hidden");
+  } else {
+    holdEl.classList.add("hidden");
+  }
+
+  // Name + major/standing
+  document.getElementById("darsName").innerText = studentName;
+  document.getElementById("darsMeta").innerText =
+    [d.major, d.standing].filter(Boolean).join(" · ");
+
+  // Stat tiles: GPA (red on probation), in-progress, completed
+  const onProbation = typeof d.gpa === "number" && d.gpa < 2.0;
+  const statsEl = document.getElementById("darsStats");
+  statsEl.innerHTML = `
+    <div class="dars-stat">
+      <div class="dars-stat-num${onProbation ? " dars-stat-bad" : ""}">${d.gpa ?? "—"}</div>
+      <div class="dars-stat-label">GPA${onProbation ? " · probation" : ""}</div>
+    </div>
+    <div class="dars-stat">
+      <div class="dars-stat-num">${d.credits_in_progress ?? "—"}</div>
+      <div class="dars-stat-label">in progress</div>
+    </div>
+    <div class="dars-stat">
+      <div class="dars-stat-num">${d.credits_completed ?? "—"}</div>
+      <div class="dars-stat-label">of ${DEGREE_HOURS} done</div>
+    </div>`;
+
+  // Progress bar toward graduation
+  const progEl = document.getElementById("darsProgress");
+  if (typeof d.credits_completed === "number") {
+    const pct = Math.min(100, Math.round((d.credits_completed / DEGREE_HOURS) * 100));
+    document.getElementById("darsBarFill").style.width = `${pct}%`;
+    document.getElementById("darsProgressText").innerText =
+      `${pct}% toward graduation` +
+      (d.expected_graduation ? ` · expected ${d.expected_graduation}` : "");
+    progEl.classList.remove("hidden");
+  } else {
+    progEl.classList.add("hidden");
+  }
+
+  // "Why it matters" — only for at-risk students that have it
+  const whyEl = document.getElementById("darsWhy");
+  if (d.why) {
+    whyEl.innerHTML = `<span class="dars-why-label">⚠ Why it matters:</span> ${d.why}`;
+    whyEl.classList.remove("hidden");
+  } else {
+    whyEl.classList.add("hidden");
+  }
 }
 
 function insertReply() {

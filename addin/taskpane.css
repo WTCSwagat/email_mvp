@@ -56,9 +56,37 @@ body {
 
 /* DARS card */
 .card-dars { background: #f0f7ff; border-color: #cfe3fa; }
-.card-dars .card-label { color: #185fa5; }
-#darsLine1 { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
-#darsLine2 { font-size: 12.5px; color: var(--muted); margin: 0; }
+.card-dars .card-label { color: #185fa5; margin: 0; }
+.dars-head { align-items: center; display: flex; gap: 8px; margin-bottom: 10px; }
+.dars-hold {
+  background: #d13438; border-radius: 9px; color: #fff; font-size: 10px;
+  font-weight: 700; margin-left: auto; padding: 2px 8px; white-space: nowrap;
+}
+#darsName { font-size: 14px; font-weight: 600; margin: 0; }
+#darsMeta { color: var(--muted); font-size: 12px; margin: 2px 0 12px; }
+
+/* DARS stat tiles */
+.dars-stats { display: flex; gap: 8px; margin-bottom: 12px; }
+.dars-stat {
+  background: var(--bg); border: 1px solid #e3eefb; border-radius: 8px;
+  flex: 1; padding: 8px 4px; text-align: center;
+}
+.dars-stat-num { font-size: 16px; font-weight: 700; }
+.dars-stat-bad { color: #b71c1c; }
+.dars-stat-label { color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+/* DARS progress bar */
+.dars-progress { margin-bottom: 12px; }
+.dars-bar { background: #dce8f5; border-radius: 3px; height: 6px; overflow: hidden; }
+.dars-bar-fill { background: #378ADD; height: 100%; }
+.dars-progress-text { color: var(--muted); font-size: 10px; margin: 5px 0 0; }
+
+/* DARS "why it matters" */
+.dars-why {
+  background: var(--orange-soft); border: 1px solid #ffd9b0; border-radius: 8px;
+  color: #8a5a00; font-size: 11.5px; line-height: 1.5; padding: 9px 10px;
+}
+.dars-why-label { font-weight: 700; }
 
 /* Draft */
 #draftSection { margin-bottom: 12px; }

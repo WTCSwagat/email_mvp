@@ -57,9 +57,18 @@
       </div>
 
       <section id="darsCard" class="card card-dars hidden">
-        <p class="card-label">Student record &middot; used</p>
-        <p id="darsLine1"></p>
-        <p id="darsLine2"></p>
+        <div class="dars-head">
+          <p class="card-label">Student record &middot; used</p>
+          <span id="darsHold" class="dars-hold hidden"></span>
+        </div>
+        <p id="darsName"></p>
+        <p id="darsMeta"></p>
+        <div id="darsStats" class="dars-stats"></div>
+        <div id="darsProgress" class="dars-progress hidden">
+          <div class="dars-bar"><div id="darsBarFill" class="dars-bar-fill"></div></div>
+          <p id="darsProgressText" class="dars-progress-text"></p>
+        </div>
+        <div id="darsWhy" class="dars-why hidden"></div>
       </section>
 
       <section id="draftSection" class="hidden">

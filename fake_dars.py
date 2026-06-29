@@ -54,6 +54,10 @@ DARS = {
             "2027. No holds; full-time at 13 hours (dropping CHEM 120 -> 9 hours, "
             "below full-time)."
         ),
+        "why": (
+            "CHEM 120 is the gateway to the whole chemistry sequence — dropping it "
+            "delays graduation past Spring 2027 and drops her below full-time."
+        ),
     },
 
     # ─── RICH: Priya Shah — Pre-Nursing (GPA-gated, prereq block) ───────────────
@@ -96,6 +100,10 @@ DARS = {
             "(application is annual). An Advising Hold is active and must be cleared "
             "before any registration change can be processed."
         ),
+        "why": (
+            "STAT 201 is a nursing prerequisite and an Advising Hold blocks changes — "
+            "dropping it pushes her nursing application back a full year."
+        ),
     },
 
     # ─── RICH: Marcus Bell — Mechanical Engineering B.S. (probation + prereqs) ──
@@ -136,6 +144,10 @@ DARS = {
             "dropping ME 231 delays graduation by roughly two semesters. A Bursar "
             "Hold blocks registration. Dropping below 12 hours ends full-time status, "
             "and his GPA already puts financial-aid Satisfactory Academic Progress at risk."
+        ),
+        "why": (
+            "ME 231 gates Heat Transfer & Fluid Mechanics, which gate senior capstone — "
+            "dropping it delays graduation ~2 semesters."
         ),
     },
 
@@ -195,6 +207,9 @@ DARS = {
     'note': 'Cumulative GPA of 1.85 is below the 2.0 minimum, which is why he was placed on '
             'academic probation. Returning to good standing means raising the cumulative GPA to '
             '2.0+, usually with an academic-recovery plan and a possible cap on credit hours.',
+    'why': (
+        'A 1.85 GPA puts him on academic probation — he needs a recovery plan to get back above 2.0.'
+    ),
     'standing': 'Sophomore',
     'student_id': '000493882'},
 
