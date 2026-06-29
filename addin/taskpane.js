@@ -13,6 +13,29 @@ const CATEGORY_DISPLAY = {
 // The current email's draft, already hydrated with the real names, ready to insert.
 let hydratedDraft = "";
 
+// ─── Responded tracking ──────────────────────────────────────────────────────
+// Mark emails as handled, keyed by Outlook message id in localStorage. The id is
+// unique per email (the shared sender doesn't matter), and it resets cleanly when
+// the inbox is reseeded. Purely local to this browser — no extra permissions.
+let currentItemId = null;
+const RESPONDED_KEY = "advise_responded_ids";
+
+function loadResponded() {
+  try { return new Set(JSON.parse(localStorage.getItem(RESPONDED_KEY) || "[]")); }
+  catch (e) { return new Set(); }
+}
+function isResponded(id) { return id ? loadResponded().has(id) : false; }
+function markResponded(id) {
+  if (!id) return;
+  const s = loadResponded();
+  s.add(id);
+  localStorage.setItem(RESPONDED_KEY, JSON.stringify([...s]));
+}
+
+function updateRespondedUI() {
+  document.getElementById("respondedBanner").classList.toggle("hidden", !isResponded(currentItemId));
+}
+
 // ─── Microsoft Graph auth (Office Dialog + MSAL) ─────────────────────────────
 // Personal outlook.com accounts can't use Office SSO, and an MSAL popup
 // (window.open) is blocked inside the task-pane iframe. So we open the sign-in
@@ -93,6 +116,7 @@ async function analyzeEmail() {
 
 function render(data, item) {
   const decision = (data.decision || "no").toLowerCase();
+  currentItemId = item.itemId || null;
 
   // Student name comes from the matched DARS record (emails are seeded into one
   // mailbox, so the "From" address is the same for all of them).
@@ -166,6 +190,9 @@ function render(data, item) {
     hide("noDraftNote");
   }
 
+  // Responded state (banner + button visibility)
+  updateRespondedUI();
+
   hide("loading");
   show("result");
 }
@@ -231,6 +258,9 @@ function insertReply() {
   Office.context.mailbox.item.displayReplyForm({
     htmlBody: hydratedDraft.replace(/\n/g, "<br>"),
   });
+  // Inserting the reply is the "I'm handling this" moment — mark it done.
+  markResponded(currentItemId);
+  updateRespondedUI();
 }
 
 function openFeedback() {
@@ -246,16 +276,14 @@ async function categorizeInbox() {
   const btn = document.getElementById("categorizeInboxBtn");
   btn.disabled = true;
   btn.innerText = "Categorizing…";
-
-  hideCategorizeResults();
-  showCategorizeLoading();
+  hideCategorizeError();
 
   let step = "sign-in";
   try {
     // Step 1: get a Graph token (Office sign-in dialog on first use, cached after)
     const token = await getGraphToken();
 
-    // Step 2: fetch 25 inbox messages (body as plain text)
+    // Step 2: fetch inbox messages (body as plain text)
     step = "reading inbox";
     const messages = await fetchInboxMessages(token, 50);
 
@@ -282,17 +310,20 @@ async function categorizeInbox() {
     step = "tagging emails";
     const failed = await applyCategoriesInBatches(token, catData.results);
 
-    // Step 5: render summary
-    renderCategorySummary(catData.results);
+    // Silent success — the result shows as color tags in Outlook itself. Just a
+    // brief confirmation on the button, no in-pane summary panel.
     if (failed > 0) {
-      showCategorizeError(`${failed} email${failed > 1 ? "s" : ""} couldn't be tagged — click Categorize Inbox again to retry.`);
+      showCategorizeError(`${failed} email${failed > 1 ? "s" : ""} couldn't be tagged — click again to retry.`);
+      btn.innerText = "Categorize Inbox";
+    } else {
+      btn.innerText = "✓ Categorized";
+      setTimeout(() => { btn.innerText = "Categorize Inbox"; }, 2500);
     }
   } catch (err) {
     showCategorizeError(`(${step}) ${err.message || "Could not categorize inbox."}`);
+    btn.innerText = "Categorize Inbox";
   } finally {
     btn.disabled = false;
-    btn.innerText = "Categorize Inbox";
-    hideCategorizeLoading();
   }
 }
 
@@ -405,65 +436,7 @@ async function applyOutlookCategory(token, messageId, category, attempt = 0) {
   }
 }
 
-function renderCategorySummary(results) {
-  const summaryEl = document.getElementById("categorize-summary");
-
-  // ── Triage digest: urgent/critical first (critical above urgent) ──
-  const rank = { critical: 0, urgent: 1 };
-  const attention = results
-    .filter((r) => r.urgency === "urgent" || r.urgency === "critical")
-    .sort((a, b) => rank[a.urgency] - rank[b.urgency]);
-
-  let html =
-    `<div class="digest-head">` +
-    `<span class="digest-sorted">✓ ${results.length} sorted</span>` +
-    (attention.length
-      ? `<span class="digest-badge">${attention.length} need attention</span>`
-      : "") +
-    `</div>`;
-
-  if (attention.length) {
-    html += `<div class="digest-list">`;
-    for (const r of attention) {
-      const info = CATEGORY_DISPLAY[r.category] || CATEGORY_DISPLAY.general;
-      html +=
-        `<div class="digest-row urgency-row-${r.urgency}">` +
-        `<span class="cat-dot" style="background:${info.hex}"></span>` +
-        `<span class="digest-name">${r.name || "Unknown"}</span>` +
-        `<span class="digest-cat">${info.name}</span>` +
-        `<span class="badge urgency-${r.urgency}">${r.urgency}</span>` +
-        `</div>`;
-    }
-    html += `</div>`;
-  }
-
-  // ── Static count chips (no expand) ──
-  const counts = {};
-  for (const r of results) counts[r.category] = (counts[r.category] || 0) + 1;
-  const chips = Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([cat, n]) => {
-      const info = CATEGORY_DISPLAY[cat] || CATEGORY_DISPLAY.general;
-      return `<span class="cat-chip"><span class="cat-dot" style="background:${info.hex}"></span>${info.name} ${n}</span>`;
-    })
-    .join("");
-  html += `<div class="cat-chips">${chips}</div>`;
-
-  summaryEl.innerHTML = html;
-  document.getElementById("categorize-results").classList.remove("hidden");
-}
-
-function showCategorizeLoading() {
-  document.getElementById("categorize-loading").classList.remove("hidden");
-  document.getElementById("categorize-error").classList.add("hidden");
-}
-
-function hideCategorizeLoading() {
-  document.getElementById("categorize-loading").classList.add("hidden");
-}
-
-function hideCategorizeResults() {
-  document.getElementById("categorize-results").classList.add("hidden");
+function hideCategorizeError() {
   document.getElementById("categorize-error").classList.add("hidden");
 }
 

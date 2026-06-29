@@ -24,18 +24,7 @@
         Categorize Inbox
       </button>
 
-      <div id="categorize-loading" class="hidden">
-        <div class="skeleton skeleton-pills"></div>
-        <div class="skeleton skeleton-card" style="height:60px"></div>
-        <p class="loading-text">Categorizing inbox&hellip;</p>
-      </div>
-
       <div id="categorize-error" class="hidden cat-error"></div>
-
-      <div id="categorize-results" class="hidden">
-        <div id="categorize-summary"></div>
-        <p class="cat-applied">&#10003; Outlook categories applied</p>
-      </div>
     </div>
 
     <div class="divider"></div>
@@ -49,6 +38,8 @@
 
     <!-- Result -->
     <div id="result" class="hidden">
+      <div id="respondedBanner" class="responded-banner hidden">&#10003; Already responded</div>
+
       <div id="statusBanner" class="banner"><span id="statusText"></span></div>
 
       <div class="pills">
