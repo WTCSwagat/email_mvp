@@ -60,6 +60,7 @@
           <p id="darsProgressText" class="dars-progress-text"></p>
         </div>
         <div id="darsWhy" class="dars-why hidden"></div>
+        <p id="darsHint" class="dars-hint hidden">Tap for full transcript &rarr;</p>
       </section>
 
       <section id="draftSection" class="hidden">
@@ -91,6 +92,18 @@
 
     <!-- Error -->
     <div id="error" class="hidden state"></div>
+
+    <!-- Student-record detail popup -->
+    <div id="darsModal" class="modal hidden">
+      <div id="darsModalBackdrop" class="modal-backdrop"></div>
+      <div class="modal-card">
+        <div class="modal-head">
+          <span id="darsModalTitle" class="modal-title"></span>
+          <button id="darsModalClose" type="button" class="modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="darsModalBody" class="modal-body"></div>
+      </div>
+    </div>
   </div>
   <script src="taskpane.js"></script>
 </body>

@@ -13,6 +13,10 @@ const CATEGORY_DISPLAY = {
 // The current email's draft, already hydrated with the real names, ready to insert.
 let hydratedDraft = "";
 
+// The current student's full DARS record + name, for the detail popup.
+let currentDars = null;
+let currentStudentName = "";
+
 // ─── Responded tracking ──────────────────────────────────────────────────────
 // Mark emails as handled, keyed by Outlook message id in localStorage. The id is
 // unique per email (the shared sender doesn't matter), and it resets cleanly when
@@ -78,6 +82,9 @@ Office.onReady((info) => {
     Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, analyzeEmail);
     document.getElementById("insertBtn").addEventListener("click", insertReply);
     document.getElementById("draftText").addEventListener("input", (e) => autoSizeDraft(e.target));
+    document.getElementById("darsCard").addEventListener("click", openDarsModal);
+    document.getElementById("darsModalClose").addEventListener("click", closeDarsModal);
+    document.getElementById("darsModalBackdrop").addEventListener("click", closeDarsModal);
     document.getElementById("thumbUp").addEventListener("click", openFeedback);
     document.getElementById("thumbDown").addEventListener("click", openFeedback);
     document.getElementById("categorizeInboxBtn").addEventListener("click", categorizeInbox);
@@ -210,7 +217,24 @@ function autoSizeDraft(el) {
 
 const DEGREE_HOURS = 120;
 
+function darsHasDetail(d) {
+  return !!(
+    (d.completed_courses && d.completed_courses.length) ||
+    (d.current_courses && d.current_courses.length) ||
+    (d.remaining_required && d.remaining_required.length) ||
+    d.note
+  );
+}
+
 function renderDarsCard(d, studentName) {
+  // Remember this record for the detail popup; make the card tappable only when
+  // there's extra detail (courses / note) worth showing.
+  currentDars = d;
+  currentStudentName = studentName;
+  const hasDetail = darsHasDetail(d);
+  document.getElementById("darsCard").classList.toggle("clickable", hasDetail);
+  document.getElementById("darsHint").classList.toggle("hidden", !hasDetail);
+
   // Hold badge — only when there's an active hold
   const holdEl = document.getElementById("darsHold");
   if (d.holds && d.holds.length) {
@@ -263,6 +287,58 @@ function renderDarsCard(d, studentName) {
   } else {
     whyEl.classList.add("hidden");
   }
+}
+
+// ─── Student-record detail popup ─────────────────────────────────────────────
+
+function openDarsModal() {
+  if (!currentDars || !darsHasDetail(currentDars)) return;
+  renderDarsModal(currentDars);
+  document.getElementById("darsModal").classList.remove("hidden");
+}
+
+function closeDarsModal() {
+  document.getElementById("darsModal").classList.add("hidden");
+}
+
+function courseSection(label, courses, kind) {
+  if (!courses || !courses.length) return "";
+  let rows = "";
+  for (const c of courses) {
+    let right = "";
+    if (kind === "completed" && c.grade) right = `<span class="course-grade">${c.grade}</span>`;
+    else if (kind === "remaining" && c.prereqs && c.prereqs.length) right = `<span class="course-prereq">needs ${c.prereqs.join(", ")}</span>`;
+    else if (c.credits != null) right = `<span class="course-cr">${c.credits} cr</span>`;
+    rows +=
+      `<div class="course-row">` +
+      `<span class="course-code">${c.code || ""}</span>` +
+      `<span class="course-title">${c.title || ""}</span>` +
+      right +
+      `</div>`;
+  }
+  return `<div class="modal-section"><p class="modal-section-label">${label}</p>${rows}</div>`;
+}
+
+function renderDarsModal(d) {
+  document.getElementById("darsModalTitle").innerText = currentStudentName || d.name || "Student record";
+
+  const facts = [];
+  if (d.gpa != null) facts.push(`GPA ${d.gpa}`);
+  if (d.credits_completed != null) facts.push(`${d.credits_completed} cr completed`);
+  if (d.expected_graduation) facts.push(`grad ${d.expected_graduation}`);
+
+  let html =
+    `<p class="modal-meta">${[d.major, d.standing].filter(Boolean).join(" · ")}</p>` +
+    (facts.length ? `<p class="modal-facts">${facts.join(" · ")}</p>` : "") +
+    courseSection("Current courses", d.current_courses, "current") +
+    courseSection("Completed", d.completed_courses, "completed") +
+    courseSection("Remaining required", d.remaining_required, "remaining");
+
+  if (d.note) {
+    html += `<div class="modal-note"><p class="modal-section-label">Advisor note</p><p>${d.note}</p></div>`;
+  }
+
+  document.getElementById("darsModalBody").innerHTML = html;
 }
 
 function insertReply() {
