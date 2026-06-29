@@ -406,28 +406,50 @@ async function applyOutlookCategory(token, messageId, category, attempt = 0) {
 }
 
 function renderCategorySummary(results) {
-  // Group by category
-  const counts = {};
-  for (const r of results) {
-    counts[r.category] = (counts[r.category] || 0) + 1;
-  }
-
   const summaryEl = document.getElementById("categorize-summary");
-  summaryEl.innerHTML = "";
 
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  for (const [cat, count] of sorted) {
-    const info = CATEGORY_DISPLAY[cat] || CATEGORY_DISPLAY.general;
-    const row = document.createElement("div");
-    row.className = "cat-row";
-    row.innerHTML = `
-      <span class="cat-dot" style="background:${info.hex}"></span>
-      <span class="cat-name">${info.name}</span>
-      <span class="cat-count">${count}</span>
-    `;
-    summaryEl.appendChild(row);
+  // ── Triage digest: urgent/critical first (critical above urgent) ──
+  const rank = { critical: 0, urgent: 1 };
+  const attention = results
+    .filter((r) => r.urgency === "urgent" || r.urgency === "critical")
+    .sort((a, b) => rank[a.urgency] - rank[b.urgency]);
+
+  let html =
+    `<div class="digest-head">` +
+    `<span class="digest-sorted">✓ ${results.length} sorted</span>` +
+    (attention.length
+      ? `<span class="digest-badge">${attention.length} need attention</span>`
+      : "") +
+    `</div>`;
+
+  if (attention.length) {
+    html += `<div class="digest-list">`;
+    for (const r of attention) {
+      const info = CATEGORY_DISPLAY[r.category] || CATEGORY_DISPLAY.general;
+      html +=
+        `<div class="digest-row urgency-row-${r.urgency}">` +
+        `<span class="cat-dot" style="background:${info.hex}"></span>` +
+        `<span class="digest-name">${r.name || "Unknown"}</span>` +
+        `<span class="digest-cat">${info.name}</span>` +
+        `<span class="badge urgency-${r.urgency}">${r.urgency}</span>` +
+        `</div>`;
+    }
+    html += `</div>`;
   }
 
+  // ── Static count chips (no expand) ──
+  const counts = {};
+  for (const r of results) counts[r.category] = (counts[r.category] || 0) + 1;
+  const chips = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([cat, n]) => {
+      const info = CATEGORY_DISPLAY[cat] || CATEGORY_DISPLAY.general;
+      return `<span class="cat-chip"><span class="cat-dot" style="background:${info.hex}"></span>${info.name} ${n}</span>`;
+    })
+    .join("");
+  html += `<div class="cat-chips">${chips}</div>`;
+
+  summaryEl.innerHTML = html;
   document.getElementById("categorize-results").classList.remove("hidden");
 }
 

@@ -128,11 +128,14 @@ async def categorize_batch(request: BatchEmailRequest):
         # Demo fast-path: a known demo email uses its curated category/urgency —
         # deterministic, correct, and instant (no Groq). Novel emails fall through
         # to the live AI categorizer.
+        dars = get_dars(email.body)
+        name = dars["name"] if dars else None
         canned = get_demo_answer(email.subject)
         if canned:
             return {
                 "id": email.id,
                 "subject": email.subject,
+                "name": name,
                 "category": canned["category"],
                 "urgency": canned["urgency"],
             }
@@ -141,6 +144,7 @@ async def categorize_batch(request: BatchEmailRequest):
         return {
             "id": email.id,
             "subject": email.subject,
+            "name": name,
             "category": category_data.get("category", "general"),
             "urgency": category_data.get("urgency", "routine"),
         }

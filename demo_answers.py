@@ -317,7 +317,7 @@ DEMO_ANSWERS = {
 
     # ── Fatima Hassan — incomplete grade request ───────────────────────────────
     "Requesting an incomplete": {
-        "category": "general", "urgency": "urgent", "decision": "partly",
+        "category": "general", "urgency": "routine", "decision": "partly",
         "draft": (
             "Hi Fatima,\n\nI'm so sorry you're dealing with this — let's look at your "
             "options. An Incomplete ('I') can be a good fit, but it has conditions: it's "
@@ -443,7 +443,7 @@ DEMO_ANSWERS = {
 
     # ── Brianna Scott — waitlist ───────────────────────────────────────────────
     "Stuck on waitlist for a required class": {
-        "category": "add_drop", "urgency": "urgent", "decision": "partly",
+        "category": "add_drop", "urgency": "routine", "decision": "partly",
         "draft": (
             "Hi Brianna,\n\nBeing #6 isn't bad, but let's not leave it to luck. Waitlists "
             "clear automatically as enrolled students drop, and movement is usually best in "
@@ -486,7 +486,7 @@ DEMO_ANSWERS = {
 
     # ── Imani Walker — grade dispute (needs advisor judgment) ───────────────────
     "Disputing a final grade": {
-        "category": "general", "urgency": "urgent", "decision": "no",
+        "category": "general", "urgency": "routine", "decision": "no",
         "draft": "",
         "checklist": ["Have the student first contact the instructor to ask how the grade was calculated",
                       "If unresolved, escalate to the department head, then the college, within deadlines",
@@ -499,7 +499,7 @@ DEMO_ANSWERS = {
 
     # ── Linda Carter (parent) — FERPA: must NOT share the student's records ─────
     "My son's grades": {
-        "category": "general", "urgency": "urgent", "decision": "partly",
+        "category": "general", "urgency": "routine", "decision": "partly",
         "draft": (
             "Hi Ms. Carter,\n\nThank you for reaching out, and I completely understand your "
             "concern for Marcus. I do want to help, so I want to be upfront about what I "
