@@ -77,6 +77,7 @@ Office.onReady((info) => {
     analyzeEmail();
     Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, analyzeEmail);
     document.getElementById("insertBtn").addEventListener("click", insertReply);
+    document.getElementById("draftText").addEventListener("input", (e) => autoSizeDraft(e.target));
     document.getElementById("thumbUp").addEventListener("click", openFeedback);
     document.getElementById("thumbDown").addEventListener("click", openFeedback);
     document.getElementById("categorizeInboxBtn").addEventListener("click", categorizeInbox);
@@ -155,7 +156,7 @@ function render(data, item) {
 
   // Draft + insert button (not on "no")
   if (decision !== "no" && hydratedDraft.trim()) {
-    document.getElementById("draftText").innerText = hydratedDraft;
+    document.getElementById("draftText").value = hydratedDraft;
     show("draftSection");
     show("insertBtn");
   } else {
@@ -195,6 +196,16 @@ function render(data, item) {
 
   hide("loading");
   show("result");
+
+  // Size the draft textarea to its content (only meaningful once visible).
+  if (!document.getElementById("draftSection").classList.contains("hidden")) {
+    autoSizeDraft(document.getElementById("draftText"));
+  }
+}
+
+function autoSizeDraft(el) {
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight + 2}px`;
 }
 
 const DEGREE_HOURS = 120;
@@ -255,8 +266,10 @@ function renderDarsCard(d, studentName) {
 }
 
 function insertReply() {
+  // Use the current textarea contents so any advisor edits are included.
+  const text = document.getElementById("draftText").value;
   Office.context.mailbox.item.displayReplyForm({
-    htmlBody: hydratedDraft.replace(/\n/g, "<br>"),
+    htmlBody: text.replace(/\n/g, "<br>"),
   });
   // Inserting the reply is the "I'm handling this" moment — mark it done.
   markResponded(currentItemId);

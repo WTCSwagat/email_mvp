@@ -90,7 +90,13 @@ body {
 
 /* Draft */
 #draftSection { margin-bottom: 12px; }
-.draft-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; line-height: 1.6; padding: 12px; white-space: pre-wrap; }
+.draft-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  box-sizing: border-box; color: var(--ink); display: block; font-family: inherit;
+  font-size: 13px; line-height: 1.6; min-height: 120px; overflow: hidden; padding: 12px;
+  resize: vertical; width: 100%;
+}
+.draft-box:focus { border-color: var(--orange); outline: none; }
 
 /* Checklist */
 .card-checklist { background: #fffaf0; border-color: #f3e2c0; }
