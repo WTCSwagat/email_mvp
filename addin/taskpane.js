@@ -88,8 +88,19 @@ Office.onReady((info) => {
     document.getElementById("thumbUp").addEventListener("click", openFeedback);
     document.getElementById("thumbDown").addEventListener("click", openFeedback);
     document.getElementById("categorizeInboxBtn").addEventListener("click", categorizeInbox);
+    document.getElementById("tabContextBtn").addEventListener("click", () => setTab("context"));
+    document.getElementById("tabDraftBtn").addEventListener("click", () => setTab("draft"));
   }
 });
+
+// Toggle between the Context and Pre-drafted tabs.
+function setTab(name) {
+  const isCtx = name === "context";
+  document.getElementById("tabContext").classList.toggle("hidden", !isCtx);
+  document.getElementById("tabDraft").classList.toggle("hidden", isCtx);
+  document.getElementById("tabContextBtn").classList.toggle("tab-active", isCtx);
+  document.getElementById("tabDraftBtn").classList.toggle("tab-active", !isCtx);
+}
 
 // ─── Single-email analysis (existing feature) ────────────────────────────────
 
@@ -161,17 +172,20 @@ function render(data, item) {
     hide("darsCard");
   }
 
-  // Draft + insert button (not on "no")
-  if (decision !== "no" && hydratedDraft.trim()) {
+  // ── Pre-drafted tab: editable draft + insert button (only when there's a draft) ──
+  const hasDraft = decision !== "no" && hydratedDraft.trim().length > 0;
+  if (hasDraft) {
     document.getElementById("draftText").value = hydratedDraft;
     show("draftSection");
     show("insertBtn");
+    hide("noDraftNote");
   } else {
     hide("draftSection");
     hide("insertBtn");
+    show("noDraftNote");
   }
 
-  // Checklist
+  // Checklist (lives in the Pre-drafted tab)
   const checklist = data.checklist || [];
   const list = document.getElementById("checklistItems");
   list.innerHTML = "";
@@ -186,17 +200,38 @@ function render(data, item) {
     hide("checklistSection");
   }
 
-  // Policy reference + no-draft note (shown when there's no draft)
+  // ── Context tab: related policy + source badge + referral ──
   const ctx = data.context || {};
   document.getElementById("policyText").innerText = ctx.text || "";
   document.getElementById("policyLink").href = ctx.link || "#";
-  if (decision === "no") {
-    show("policySection");
-    show("noDraftNote");
+  const srcEl = document.getElementById("ctxSource");
+  const src = (ctx.source || "").toLowerCase();
+  if (src.includes("knowledge base") || src.includes("verified")) {
+    srcEl.innerText = "✓ Verified knowledge base";
+    srcEl.className = "ctx-source ctx-source-verified";
+  } else if (ctx.text) {
+    srcEl.innerText = "AI-generated";
+    srcEl.className = "ctx-source ctx-source-ai";
   } else {
-    hide("policySection");
-    hide("noDraftNote");
+    srcEl.className = "ctx-source hidden";
   }
+
+  const ref = data.referral || {};
+  const refBlock = document.getElementById("referralBlock");
+  if (ref.office) {
+    document.getElementById("referralText").innerText =
+      ref.office + (ref.action ? ` · ${ref.action}` : "");
+    const refLink = document.getElementById("referralLink");
+    if (ref.link) { refLink.href = ref.link; refLink.classList.remove("hidden"); }
+    else { refLink.classList.add("hidden"); }
+    refBlock.classList.remove("hidden");
+  } else {
+    refBlock.classList.add("hidden");
+  }
+
+  // Show the tabs; default to Pre-drafted when there's a draft, else Context
+  show("tabBar");
+  setTab(hasDraft ? "draft" : "context");
 
   // Responded state (banner + button visibility)
   updateRespondedUI();

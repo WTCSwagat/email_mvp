@@ -63,25 +63,45 @@
         <p id="darsHint" class="dars-hint hidden">Tap for full transcript &rarr;</p>
       </section>
 
-      <section id="draftSection" class="hidden">
-        <p class="card-label">Draft reply &middot; editable</p>
-        <textarea id="draftText" class="draft-box" spellcheck="true" aria-label="Draft reply, editable"></textarea>
-      </section>
+      <!-- Context / Pre-drafted tabs -->
+      <div id="tabBar" class="tabbar hidden">
+        <button id="tabContextBtn" type="button" class="tab">Context</button>
+        <button id="tabDraftBtn" type="button" class="tab tab-active">Pre-drafted</button>
+      </div>
 
-      <section id="checklistSection" class="card card-checklist hidden">
-        <p class="card-label">Before sending &mdash; check:</p>
-        <ul id="checklistItems"></ul>
-      </section>
+      <!-- Context tab: related policy, source, referral -->
+      <div id="tabContext" class="tabpanel hidden">
+        <section class="card">
+          <div class="ctx-head">
+            <p class="card-label">Related policy</p>
+            <span id="ctxSource" class="ctx-source hidden"></span>
+          </div>
+          <p id="policyText"></p>
+          <a id="policyLink" href="#" target="_blank" rel="noopener" class="link">View UTK policy &rarr;</a>
+          <div id="referralBlock" class="ctx-referral hidden">
+            <p class="card-label">Refer if needed</p>
+            <p id="referralText"></p>
+            <a id="referralLink" href="#" target="_blank" rel="noopener" class="link hidden">Contact &rarr;</a>
+          </div>
+        </section>
+      </div>
 
-      <button id="insertBtn" type="button" class="btn-primary hidden">Insert into reply</button>
+      <!-- Pre-drafted tab: editable draft, checklist, insert -->
+      <div id="tabDraft" class="tabpanel">
+        <section id="draftSection" class="hidden">
+          <p class="card-label">Draft reply &middot; editable</p>
+          <textarea id="draftText" class="draft-box" spellcheck="true" aria-label="Draft reply, editable"></textarea>
+        </section>
 
-      <section id="policySection" class="card hidden">
-        <p class="card-label">Policy (reference)</p>
-        <p id="policyText"></p>
-        <a id="policyLink" href="#" target="_blank" rel="noopener" class="link">View UTK policy &rarr;</a>
-      </section>
+        <section id="checklistSection" class="card card-checklist hidden">
+          <p class="card-label">Before sending &mdash; check:</p>
+          <ul id="checklistItems"></ul>
+        </section>
 
-      <div id="noDraftNote" class="note hidden">No auto-draft &mdash; this one needs your judgment.</div>
+        <button id="insertBtn" type="button" class="btn-primary hidden">Insert into reply</button>
+
+        <div id="noDraftNote" class="note hidden">No auto-draft &mdash; this one needs your judgment.</div>
+      </div>
 
       <div id="feedback" class="feedback">
         <span class="feedback-q">Was this helpful?</span>

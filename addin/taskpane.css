@@ -124,6 +124,25 @@ body {
 .modal-note p { margin: 0; }
 .modal-note .modal-section-label { margin-bottom: 4px; }
 
+/* Context / Pre-drafted tabs */
+.tabbar { display: flex; gap: 6px; margin-bottom: 12px; }
+.tab {
+  flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 7px;
+  color: var(--muted); cursor: pointer; font-family: inherit; font-size: 12px;
+  font-weight: 600; padding: 7px; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.tab:hover { background: var(--orange-soft); }
+.tab-active { background: var(--orange-soft); border: 1.5px solid var(--orange); color: var(--orange-dark); }
+
+.ctx-head { align-items: center; display: flex; gap: 8px; margin-bottom: 8px; }
+.ctx-head .card-label { margin: 0; }
+.ctx-source { border-radius: 9px; flex: none; font-size: 10px; font-weight: 700; margin-left: auto; padding: 2px 8px; }
+.ctx-source-verified { background: #e6f4ea; color: #1b5e20; }
+.ctx-source-ai { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+.ctx-referral { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 10px; }
+.ctx-referral .card-label { margin-bottom: 4px; }
+#referralText { font-size: 12.5px; margin: 0 0 4px; }
+
 /* Draft */
 #draftSection { margin-bottom: 12px; }
 .draft-box {
