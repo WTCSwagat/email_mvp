@@ -1,4 +1,4 @@
-"""27 fake student emails for seeding the demo inbox.
+"""24 fake student emails for seeding the demo inbox.
 
 Each body STARTS with the student's name so the backend can detect which student
 it is (get_dars in fake_dars.py scans the text for a known name). This matters
@@ -6,8 +6,8 @@ because browser-seeded emails all arrive from one address, so we match on the
 NAME in the body, not the sender address.
 
 Every name has a matching record in fake_dars.py and a canned answer in
-demo_answers.py. Mental-health emails are kept to two and are NOT auto-drafted
-(handled in main.py). The last email is a FERPA parent request.
+demo_answers.py. Mental-health emails are NOT auto-drafted (handled in
+main.py). The last email is a FERPA parent request.
 """
 
 FAKE_EMAILS = [
@@ -36,9 +36,6 @@ FAKE_EMAILS = [
      "body": "Hi, this is Marcus Bell. There's a bursar hold on my account and I can't register. I'm also worried about losing my aid because of my grades. Help?"},
 
     # ---- Other students (each has a DARS record too) ----
-    {"name": "Taylor Morris", "sender": "taylor.morris@vols.utk.edu", "scenario": "add_drop",
-     "subject": "Drop deadline question",
-     "body": "Hi, my name is Taylor Morris. How late can I drop a class without it showing on my transcript?"},
     {"name": "Sam Rivera", "sender": "sam.rivera@vols.utk.edu", "scenario": "major_change",
      "subject": "Switching to Computer Science",
      "body": "Hi, my name is Sam Rivera. I want to switch from Psychology to Computer Science. How hard is it to change majors?"},
@@ -48,20 +45,11 @@ FAKE_EMAILS = [
     {"name": "Devon Parker", "sender": "devon.parker@vols.utk.edu", "scenario": "financial",
      "subject": "What does SAP mean?",
      "body": "Hi, my name is Devon Parker. I got an email saying my financial aid is at risk because of SAP. What does that mean and what do I do?"},
-    {"name": "Riley Adams", "sender": "riley.adams@vols.utk.edu", "scenario": "general",
-     "subject": "Planning next semester",
-     "body": "Hi, my name is Riley Adams. Who do I talk to about planning my schedule for next semester?"},
-    {"name": "Alex Kim", "sender": "alex.kim@vols.utk.edu", "scenario": "general",
-     "subject": "Academic calendar?",
-     "body": "Hi, my name is Alex Kim. Where can I find the academic calendar and the registration dates for next term?"},
 
-    # ---- Mental health (max two) -> NOT auto-drafted ----
+    # ---- Mental health -> NOT auto-drafted ----
     {"name": "Casey Nguyen", "sender": "casey.nguyen@vols.utk.edu", "scenario": "mental_health",
      "subject": "Feeling overwhelmed",
      "body": "Hi, my name is Casey Nguyen. I've been really overwhelmed and anxious lately and it's affecting my classes. I don't know who to talk to."},
-    {"name": "Morgan Diaz", "sender": "morgan.diaz@vols.utk.edu", "scenario": "mental_health urgent",
-     "subject": "Really struggling",
-     "body": "Hi, my name is Morgan Diaz. I'm struggling a lot right now and feeling pretty hopeless. I don't know what to do."},
 
     # ---- Hyper-specific -> should land as "no" (needs advisor judgment) ----
     {"name": "Chris Taylor", "sender": "chris.taylor@vols.utk.edu", "scenario": "no (hyper-specific)",
@@ -90,9 +78,6 @@ FAKE_EMAILS = [
     {"name": 'Simone Grant', "sender": 'simone.grant@vols.utk.edu', "scenario": 'double_major',
      "subject": 'Adding a second major',
      "body": "Hi, my name is Simone Grant. I'm a sophomore majoring in Economics and I want to add Political Science as a second major. Is that possible, and how do I do it?"},
-    {"name": 'Aiden Flores', "sender": 'aiden.flores@vols.utk.edu', "scenario": 'minor_declaration',
-     "subject": 'How do I add a minor?',
-     "body": "Hi, my name is Aiden Flores. I want to add a Spanish minor to my degree plan. What's the process for that and does it affect my graduation timeline?"},
     {"name": 'Brianna Scott', "sender": 'brianna.scott@vols.utk.edu', "scenario": 'waitlist',
      "subject": 'Stuck on waitlist for a required class',
      "body": "Hi, my name is Brianna Scott. I'm number 6 on the waitlist for PSYC 301, which I need for my major. What are my chances of getting in, and what should I do if I don't?"},
@@ -105,4 +90,12 @@ FAKE_EMAILS = [
     {"name": 'Linda Carter (parent)', "sender": 'lindacarter1972@gmail.com', "scenario": 'FERPA (parent request)',
      "subject": "My son's grades",
      "body": "Hi, my name is Linda Carter and I'm the mother of Marcus Carter, a sophomore at UTK. Marcus hasn't been returning my calls and I'm very worried about him. His father and I are paying for his tuition and we just want to know if he's passing his classes and if everything is okay. Can you please tell me how he's doing academically? I don't understand why this information would be kept from his own parents."},
+
+    # ---- Swagat Khot (real transfer scenarios: AP credit + Governor's School credit) ----
+    {"name": "Swagat Khot", "sender": "swagat.khot@vols.utk.edu", "scenario": "ap_credit_gen_ed",
+     "subject": "AP Art History credit toward Arts & Humanities requirement",
+     "body": "Hi, my name is Swagat Khot. I'm writing to ask whether my AP Art History score of 4 can be applied toward the Arts & Humanities (VC) requirement. If it doesn't automatically count, I'd like to know whether it's possible to petition and what the process would be."},
+    {"name": "Swagat Khot", "sender": "swagat.khot@vols.utk.edu", "scenario": "transfer_credit_governors_school",
+     "subject": "Governor's School credits - where do they fit?",
+     "body": "Hi, my name is Swagat Khot. I'll be having my pre-transfer advising meeting soon. I was also wondering how my Governor's School credits can be applied toward my coursework at UTK. Could you please let me know where these credits may fit?"},
 ]

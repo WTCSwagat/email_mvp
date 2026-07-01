@@ -51,10 +51,10 @@ checklist[], used_record, dars{...}, referral{office,action,link}`
 - `context.py` — `get_context`: **AI-first**, falls back to the fake KB on the `NO_INFO` sentinel.
 - `knowledge_base.py` — fake in-memory KB of verified policy answers + `get_knowledge`.
 - `judge.py` — `judge_context`: reasoning brain → `decision` + `draft` + `checklist`; sees full email + DARS. Swappable to Claude later.
-- `fake_dars.py` — fake degree records **keyed by NAME**, matched by scanning the email body. **EVERY student now has a RICH record** (completed_courses + current_courses + remaining_required with prereq chains + note; some have a short `why`). 24 students incl. the FERPA son "Marcus Carter".
-- `fake_emails.py` — **27** fake student emails; **each body starts with the student's name** (that's how DARS is matched). Verified: each email resolves to exactly one student (no name collisions).
+- `fake_dars.py` — fake degree records **keyed by NAME**, matched by scanning the email body. **EVERY student now has a RICH record** (completed_courses + current_courses + remaining_required with prereq chains + note; some have a short `why`). 20 students incl. the FERPA son "Marcus Carter".
+- `fake_emails.py` — **24** fake student emails; **each body starts with the student's name** (that's how DARS is matched). Verified: each email resolves to exactly one student (no name collisions).
 - `referral.py` — referral map + `generate_referral_draft`.
-- `demo_answers.py` — **`demo` branch ONLY**: canned "perfect" answers keyed by subject (zero LLM calls). **Covers all 27 subjects** incl. mental-health (no draft) and FERPA (decline + cite FERPA).
+- `demo_answers.py` — **`demo` branch ONLY**: canned "perfect" answers keyed by subject (zero LLM calls). **Covers all 24 subjects** incl. mental-health (no draft) and FERPA (decline + cite FERPA).
 
 ## Key files (frontend, `addin/`)
 - `taskpane.html/css/js` — the task pane. Current UI (top → bottom):
@@ -91,16 +91,16 @@ checklist[], used_record, dars{...}, referral{office,action,link}`
 
 ## Demo environment
 - Demo mailbox: **`advise.assist@outlook.com`** (personal account).
-- Seed via **`reseed_inbox.py`** (Playwright; manual login; deletes old inbox, sends the **27** emails from `fake_emails.py`). App-password/IMAP route was abandoned.
+- Seed via **`reseed_inbox.py`** (Playwright; manual login; deletes old inbox, sends the **24** emails from `fake_emails.py`). App-password/IMAP route was abandoned.
 
 ## What's left for the pilot
 - [ ] **Keep-warm pinger** (UptimeRobot on Render `/` every ~10 min) — kills the cold-start "failed to fetch". Highest reliability win.
-- [ ] **Re-seed the inbox** with the 27 emails (`reseed_inbox.py`).
+- [ ] **Re-seed the inbox** with the 24 emails (`reseed_inbox.py`).
 - [ ] **Google Form** for feedback + paste link into `FEEDBACK_FORM_URL` in `taskpane.js` (currently empty).
 - [ ] **Advisor onboarding** — decided: do a **short 1:1 live call** (watch them use it), not pure self-serve (they won't find the buried button / cold-start would look broken). Then leave self-serve access + form.
 - [ ] **Quick-start guide / call run-sheet** for advisors (where the button is + "try these 3 emails").
 - [ ] Recruit ~5 real advisors (mix of skeptic + eager).
-- Done this cycle: Categorize Inbox (Graph), all-27 rich records + canned answers, editable draft, responded banner, student-record popup, Context/Pre-drafted tabs, dead-CSS cleanup, deploy both on `demo`.
+- Done this cycle: Categorize Inbox (Graph), all-24 rich records + canned answers, editable draft, responded banner, student-record popup, Context/Pre-drafted tabs, dead-CSS cleanup, deploy both on `demo`.
 
 ## Working style the user prefers
 Demo-grade, not perfect. Flag only what genuinely breaks the function; skip exhaustive

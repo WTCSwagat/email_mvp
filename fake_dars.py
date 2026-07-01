@@ -150,40 +150,6 @@ DARS = {
         ),
     },
 
-    # ─── Taylor Morris — Psychology B.A. (drop-deadline question) ───────────────
-    "Taylor Morris": {
-        "student_id": "000463012",
-        "major": "Psychology, B.A.",
-        "standing": "Sophomore",
-        "gpa": 3.10,
-        "credits_completed": 30,
-        "credits_in_progress": 15,
-        "holds": [],
-        "completed_courses": [
-            {"code": "PSYC 110", "title": "General Psychology", "credits": 3, "grade": "A-"},
-            {"code": "ENGL 101", "title": "English Composition I", "credits": 3, "grade": "B"},
-            {"code": "ENGL 102", "title": "English Composition II", "credits": 3, "grade": "B+"},
-            {"code": "MATH 119", "title": "College Algebra", "credits": 3, "grade": "B"},
-            {"code": "SOCI 120", "title": "Social Problems", "credits": 3, "grade": "A-"},
-        ],
-        "current_courses": [
-            {"code": "PSYC 220", "title": "Lifespan Psychology", "credits": 3},
-            {"code": "PSYC 295", "title": "Research Methods", "credits": 3},
-            {"code": "BIOL 101", "title": "Concepts of Biology", "credits": 4},
-            {"code": "HIST 221", "title": "US History I", "credits": 3},
-        ],
-        "remaining_required": [
-            {"code": "PSYC 300", "title": "Statistics in Psychology", "credits": 3, "prereqs": ["PSYC 295"]},
-            {"code": "PSYC 320", "title": "Cognitive Psychology", "credits": 3, "prereqs": ["PSYC 300"]},
-            {"code": "PSYC 460", "title": "Senior Capstone", "credits": 3, "prereqs": ["PSYC 320"]},
-        ],
-        "note": (
-            "On track with a solid 3.10 GPA. Asking about the add/drop deadline — can "
-            "drop without a 'W' until the posted deadline; dropping below 12 hours would "
-            "end full-time status."
-        ),
-    },
-
     # ─── Sam Rivera — Psychology B.A., exploring a switch to CS ─────────────────
     "Sam Rivera": {
         "student_id": "000471188",
@@ -288,74 +254,6 @@ DARS = {
         ),
     },
 
-    # ─── Riley Adams — English B.A. (planning next semester) ────────────────────
-    "Riley Adams": {
-        "student_id": "000421746",
-        "major": "English, B.A.",
-        "standing": "Senior",
-        "gpa": 3.61,
-        "credits_completed": 90,
-        "credits_in_progress": 12,
-        "expected_graduation": "Spring 2026",
-        "holds": [],
-        "completed_courses": [
-            {"code": "ENGL 101", "title": "English Composition I", "credits": 3, "grade": "A"},
-            {"code": "ENGL 102", "title": "English Composition II", "credits": 3, "grade": "A-"},
-            {"code": "ENGL 251", "title": "British Literature I", "credits": 3, "grade": "A"},
-            {"code": "ENGL 252", "title": "American Literature", "credits": 3, "grade": "A-"},
-            {"code": "HIST 221", "title": "US History I", "credits": 3, "grade": "B+"},
-        ],
-        "current_courses": [
-            {"code": "ENGL 360", "title": "Advanced Composition", "credits": 3},
-            {"code": "ENGL 401", "title": "Shakespeare", "credits": 3},
-            {"code": "PHIL 110", "title": "Intro to Philosophy", "credits": 3},
-            {"code": "ART 100", "title": "Art History Survey", "credits": 3},
-        ],
-        "remaining_required": [
-            {"code": "ENGL 455", "title": "Literary Theory", "credits": 3, "prereqs": ["ENGL 360"]},
-            {"code": "ENGL 480", "title": "Senior Seminar", "credits": 3, "prereqs": ["ENGL 455"]},
-        ],
-        "note": (
-            "Strong 3.61 GPA, nearly done. Planning the final-year schedule around the "
-            "remaining major requirements (Literary Theory -> Senior Seminar). Best built "
-            "from the degree audit plus the registration calendar."
-        ),
-    },
-
-    # ─── Alex Kim — Computer Science B.S. (academic calendar question) ──────────
-    "Alex Kim": {
-        "student_id": "000452907",
-        "major": "Computer Science, B.S.",
-        "standing": "Sophomore",
-        "gpa": 3.30,
-        "credits_completed": 48,
-        "credits_in_progress": 15,
-        "holds": [],
-        "completed_courses": [
-            {"code": "COSC 102", "title": "Intro to Computer Science", "credits": 4, "grade": "A"},
-            {"code": "COSC 202", "title": "Data Structures", "credits": 4, "grade": "B+"},
-            {"code": "MATH 141", "title": "Calculus I", "credits": 4, "grade": "B"},
-            {"code": "MATH 142", "title": "Calculus II", "credits": 4, "grade": "B+"},
-            {"code": "ENGL 101", "title": "English Composition I", "credits": 3, "grade": "A-"},
-        ],
-        "current_courses": [
-            {"code": "COSC 302", "title": "Data Structures II", "credits": 3},
-            {"code": "COSC 311", "title": "Discrete Structures", "credits": 3},
-            {"code": "MATH 251", "title": "Matrix Algebra", "credits": 3},
-            {"code": "PHYS 231", "title": "Physics for Engineers I", "credits": 4},
-        ],
-        "remaining_required": [
-            {"code": "COSC 312", "title": "Algorithm Analysis", "credits": 3, "prereqs": ["COSC 302", "COSC 311"]},
-            {"code": "COSC 360", "title": "Systems Programming", "credits": 3, "prereqs": ["COSC 302"]},
-            {"code": "COSC 365", "title": "Programming Languages", "credits": 3, "prereqs": ["COSC 360"]},
-        ],
-        "note": (
-            "On track in the CS sequence with a 3.30 GPA. Asking where to find the "
-            "academic calendar and registration dates — registration timing is set by "
-            "class standing (time ticket)."
-        ),
-    },
-
     # ─── Casey Nguyen — Undecided (mental-health email; responds personally) ────
     "Casey Nguyen": {
         "student_id": "000490011",
@@ -386,37 +284,6 @@ DARS = {
             "Undecided major, working through general-education courses. This is a "
             "mental-health email — respond personally and share the UTK Counseling Center "
             "(free, confidential, 24/7); no auto-draft."
-        ),
-    },
-
-    # ─── Morgan Diaz — Sociology B.A. (critical mental-health email) ────────────
-    "Morgan Diaz": {
-        "student_id": "000495533",
-        "major": "Sociology, B.A.",
-        "standing": "Freshman",
-        "gpa": 2.80,
-        "credits_completed": 18,
-        "credits_in_progress": 12,
-        "holds": [],
-        "completed_courses": [
-            {"code": "SOCI 110", "title": "Intro to Sociology", "credits": 3, "grade": "B"},
-            {"code": "ENGL 101", "title": "English Composition I", "credits": 3, "grade": "B-"},
-            {"code": "PSYC 110", "title": "General Psychology", "credits": 3, "grade": "B+"},
-        ],
-        "current_courses": [
-            {"code": "SOCI 120", "title": "Social Problems", "credits": 3},
-            {"code": "ENGL 102", "title": "English Composition II", "credits": 3},
-            {"code": "MATH 119", "title": "College Algebra", "credits": 3},
-            {"code": "BIOL 101", "title": "Concepts of Biology", "credits": 4},
-        ],
-        "remaining_required": [
-            {"code": "SOCI 250", "title": "Research Methods", "credits": 3, "prereqs": ["SOCI 110"]},
-            {"code": "SOCI 360", "title": "Social Theory", "credits": 3, "prereqs": ["SOCI 250"]},
-        ],
-        "note": (
-            "Early in the major. This email signals hopelessness — treat as urgent, "
-            "respond personally and promptly, and surface the UTK Counseling Center 24/7 "
-            "crisis line; escalate if any risk of harm. No auto-draft."
         ),
     },
 
@@ -709,41 +576,6 @@ DARS = {
         ),
     },
 
-    # ─── Aiden Flores — Marketing B.S. (adding a Spanish minor) ─────────────────
-    "Aiden Flores": {
-        "student_id": "000500447",
-        "major": "Marketing, B.S.",
-        "standing": "Junior",
-        "gpa": 3.05,
-        "credits_completed": 60,
-        "credits_in_progress": 15,
-        "holds": [],
-        "completed_courses": [
-            {"code": "BUAD 200", "title": "Intro to Business", "credits": 3, "grade": "B"},
-            {"code": "ECON 201", "title": "Microeconomics", "credits": 3, "grade": "B-"},
-            {"code": "ACCT 200", "title": "Foundations of Accounting", "credits": 3, "grade": "B+"},
-            {"code": "MARK 300", "title": "Principles of Marketing", "credits": 3, "grade": "B"},
-            {"code": "ENGL 101", "title": "English Composition I", "credits": 3, "grade": "A-"},
-        ],
-        "current_courses": [
-            {"code": "MARK 320", "title": "Consumer Behavior", "credits": 3},
-            {"code": "MARK 350", "title": "Marketing Research", "credits": 3},
-            {"code": "SPAN 211", "title": "Intermediate Spanish I", "credits": 3},
-            {"code": "STAT 201", "title": "Introduction to Statistics", "credits": 3},
-        ],
-        "remaining_required": [
-            {"code": "MARK 450", "title": "Marketing Strategy", "credits": 3, "prereqs": ["MARK 320"]},
-            {"code": "SPAN 311", "title": "Spanish Conversation (minor)", "credits": 3, "prereqs": ["SPAN 211"]},
-            {"code": "SPAN 312", "title": "Spanish Composition (minor)", "credits": 3, "prereqs": ["SPAN 311"]},
-        ],
-        "note": (
-            "Wants to add a Spanish minor (already in SPAN 211). Declaring a minor is "
-            "done through that department; a minor is typically 15-18 hours, and whether "
-            "it delays graduation depends on overlap with electives and remaining "
-            "requirements."
-        ),
-    },
-
     # ─── Brianna Scott — Psychology B.A. (waitlisted for PSYC 301) ──────────────
     "Brianna Scott": {
         "student_id": "000499205",
@@ -880,6 +712,52 @@ DARS = {
             "student's education records to a parent without the student's written "
             "consent, even when the parent pays tuition. The advisor can see this record "
             "but cannot share it with the parent."
+        ),
+    },
+
+    # ─── Swagat Khot — Transfer, Business Analytics B.S. (AP credit + Governor's School) ───
+    "Swagat Khot": {
+        "student_id": "000502931",
+        "major": "Business Analytics, B.S.",
+        "catalog_year": "2025-2026",
+        "standing": "Sophomore (Transfer)",
+        "gpa": 3.58,
+        "credits_completed": 32,
+        "credits_in_progress": 14,
+        "expected_graduation": "Spring 2029",
+        "holds": [],
+        "completed_courses": [
+            {"code": "ENGL 101", "title": "English Composition I", "credits": 3, "grade": "A-"},
+            {"code": "MATH 125", "title": "Precalculus", "credits": 3, "grade": "B+"},
+            {"code": "BUAD 110", "title": "Introduction to Business", "credits": 3, "grade": "A"},
+            {"code": "COMM 210", "title": "Public Speaking", "credits": 3, "grade": "B"},
+            {"code": "PSYC 110", "title": "General Psychology", "credits": 3, "grade": "A-"},
+        ],
+        "current_courses": [
+            {"code": "ENGL 102", "title": "English Composition II", "credits": 3},
+            {"code": "MATH 141", "title": "Calculus I", "credits": 4},
+            {"code": "ECON 201", "title": "Microeconomics", "credits": 3},
+            {"code": "BUAD 210", "title": "Business Statistics", "credits": 4},
+        ],
+        "remaining_required": [
+            {"code": "ARTH LD", "title": "Arts & Humanities (VC) gen-ed - lower-division art history equivalency", "credits": 3, "prereqs": []},
+            {"code": "SOCI 110", "title": "Introduction to Sociology (Social Sciences gen-ed)", "credits": 3, "prereqs": []},
+        ],
+        "note": (
+            "AP Art History score of 4 was self-reported on his application; the official "
+            "College Board score report has not yet posted, so no AP credit shows on DARS "
+            "yet. Per the UTK AP credit chart, a 3, 4, or 5 on AP Art History covers ARTH LD "
+            "(3 credit hours), which satisfies the Arts & Humanities (VC) requirement above. "
+            "Separately, he's a transfer student with Governor's School coursework pending "
+            "evaluation ahead of his pre-transfer advising meeting; transfer/dual-enrollment "
+            "credit like this is matched course-by-course against UTK equivalencies once an "
+            "official transcript is on file, and anything without a direct match typically "
+            "posts as general elective credit."
+        ),
+        "why": (
+            "AP Art History score of 4 should clear the Arts & Humanities (VC) requirement "
+            "via ARTH LD once the official score posts, and his Governor's School credits "
+            "still need course-by-course evaluation at the pre-transfer meeting."
         ),
     },
 }

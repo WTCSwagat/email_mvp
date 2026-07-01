@@ -147,21 +147,6 @@ DEMO_ANSWERS = {
     },
 
     # ── General fallback students (concise, solid) ──────────────────────────────
-    "Drop deadline question": {
-        "category": "add_drop", "urgency": "routine", "decision": "yes",
-        "draft": (
-            "Hi Taylor,\n\nGreat question. You can drop a course without a 'W' on your "
-            "transcript up until the posted add/drop deadline — typically the first two "
-            "weeks of the semester. After that, a dropped course shows as a 'W' until the "
-            "later withdrawal deadline. The exact dates are on the One Stop add/drop page. "
-            "Just note that dropping below 12 hours affects full-time status. Happy to help "
-            "you check the dates for your classes.\n\nBest,\n[Advisor name]"
-        ),
-        "checklist": [],
-        "context": _ctx("add_drop",
-            "Courses can be dropped without a 'W' until the posted add/drop deadline; after "
-            "that a 'W' applies until the withdrawal deadline."),
-    },
     "Switching to Computer Science": {
         "category": "major_change", "urgency": "routine", "decision": "partly",
         "draft": (
@@ -208,36 +193,6 @@ DEMO_ANSWERS = {
             "Satisfactory Academic Progress (SAP) requires a minimum GPA and completion "
             "rate to keep aid; students who fall short can file an appeal."),
     },
-    "Planning next semester": {
-        "category": "general", "urgency": "routine", "decision": "yes",
-        "draft": (
-            "Hi Riley,\n\nI'd be glad to help you plan next semester. The best starting "
-            "point is your degree audit (DARS), which shows what you've completed and "
-            "what's left — we can build your schedule around remaining requirements and "
-            "any courses offered only certain terms. Want to set up a quick advising "
-            "appointment? Registration dates are on the academic calendar in the "
-            "meantime.\n\nBest,\n[Advisor name]"
-        ),
-        "checklist": [],
-        "context": _ctx("general",
-            "Schedule planning is best done from the student's degree audit (DARS) and the "
-            "academic calendar for registration windows."),
-    },
-    "Academic calendar?": {
-        "category": "general", "urgency": "routine", "decision": "yes",
-        "draft": (
-            "Hi Alex,\n\nYou can find the academic calendar — registration windows, "
-            "add/drop and withdrawal deadlines, and breaks — on the One Stop / Registrar "
-            "site. Registration opens based on class standing, and your enrollment time "
-            "ticket shows your exact date. Let me know if you'd like help planning around "
-            "those dates.\n\nBest,\n[Advisor name]"
-        ),
-        "checklist": [],
-        "context": _ctx("general",
-            "The academic calendar lists registration windows and deadlines; registration "
-            "timing is based on class standing (time ticket)."),
-    },
-
     # ── Mental health — NO auto-draft (advisor responds personally) ────────────
     "Feeling overwhelmed": {
         "category": "mental_health", "urgency": "urgent", "decision": "no",
@@ -248,16 +203,6 @@ DEMO_ANSWERS = {
             "The UTK Counseling Center offers free, confidential counseling and 24/7 crisis "
             "support. Respond personally; if the student may be in immediate danger, treat "
             "it as urgent and surface crisis resources right away."),
-    },
-    "Really struggling": {
-        "category": "mental_health", "urgency": "critical", "decision": "no",
-        "draft": "",
-        "checklist": ["Reach out personally and promptly",
-                      "Share the UTK Counseling Center 24/7 crisis line; if any risk of harm, escalate immediately"],
-        "context": _ctx("mental_health",
-            "Language suggesting hopelessness should be treated as urgent. The UTK "
-            "Counseling Center provides 24/7 crisis support. Respond personally and "
-            "promptly; if there is any risk of harm, escalate to crisis resources right away."),
     },
 
     # ── Hyper-specific — needs the advisor ─────────────────────────────────────
@@ -422,25 +367,6 @@ DEMO_ANSWERS = {
             "majors must be completed, which can extend the time to graduate."),
     },
 
-    # ── Aiden Flores — minor declaration ───────────────────────────────────────
-    "How do I add a minor?": {
-        "category": "major_change", "urgency": "routine", "decision": "yes",
-        "draft": (
-            "Hi Aiden,\n\nHappy to help — adding a Spanish minor is one of the easier "
-            "things to set up. You declare it through the Spanish department (in Modern "
-            "Foreign Languages); they'll add it to your degree plan. A minor usually runs "
-            "about 15-18 hours.\n\nWhether it pushes your graduation back really depends on "
-            "overlap: some of those Spanish courses can double-count toward your "
-            "electives or gen-ed requirements, in which case it adds little or nothing. If "
-            "you want, send me your remaining requirements and I'll show you how the minor "
-            "fits into your remaining electives.\n\nBest,\n[Advisor name]"
-        ),
-        "checklist": [],
-        "context": _ctx("major_change",
-            "A minor (typically 15-18 hours) is declared through the offering department; "
-            "courses that overlap with electives or gen-eds may limit any added time."),
-    },
-
     # ── Brianna Scott — waitlist ───────────────────────────────────────────────
     "Stuck on waitlist for a required class": {
         "category": "add_drop", "urgency": "routine", "decision": "partly",
@@ -495,6 +421,71 @@ DEMO_ANSWERS = {
             "UTK has a formal grade-appeal process: the student must start with the "
             "instructor, then escalate to the department head and college within published "
             "deadlines. This needs the advisor to guide it, not an auto-reply."),
+    },
+
+    # ── Swagat Khot — AP credit toward a gen-ed requirement ────────────────────
+    "AP Art History credit toward Arts & Humanities requirement": {
+        "category": "general", "urgency": "routine", "decision": "partly",
+        "draft": (
+            "Hi Swagat,\n\nGood news — a 3, 4, or 5 on the AP Art History exam covers "
+            "ARTH LD (3 credit hours), which does satisfy your Arts & Humanities (VC) "
+            "requirement. I checked your DARS and don't see it posted yet, which usually "
+            "just means the official College Board score report hasn't arrived — a "
+            "self-reported score on your application isn't enough on its own. AP scores "
+            "are standardized, so they generally won't apply outside the courses already "
+            "listed on our AP equivalency chart.\n\nIf it turns out not to apply "
+            "automatically once the official score is in, the transfer center can help "
+            "you petition. A couple of useful links:\n"
+            "https://admissions.utk.edu/prior-learning-credits/\n"
+            "https://admissions.utk.edu/undergraduate-application/transfer-information/\n\n"
+            "Let me know if you have any questions.\n\nBest,\n[Advisor name]"
+        ),
+        "checklist": ["Confirm the official AP score report has been sent from College Board to UTK",
+                      "If it doesn't apply automatically once posted, direct student to the transfer center to petition"],
+        "context": {
+            "text": (
+                "A score of 3, 4, or 5 on AP Art History covers ARTH LD (3 credit hours), "
+                "which satisfies the Arts & Humanities (VC) gen-ed requirement. AP credit "
+                "requires an OFFICIAL College Board score report (self-reported scores don't "
+                "post credit) and is standardized, so it may not apply outside the listed "
+                "equivalencies. Students can petition through the transfer center if a "
+                "course doesn't apply automatically."
+            ),
+            "link": "https://admissions.utk.edu/prior-learning-credits/",
+            "source": "verified knowledge base",
+        },
+    },
+
+    # ── Swagat Khot — Governor's School / transfer credit evaluation ───────────
+    "Governor's School credits - where do they fit?": {
+        "category": "general", "urgency": "routine", "decision": "partly",
+        "draft": (
+            "Hi Swagat,\n\nGlad to hear the pre-transfer advising meeting is on the "
+            "calendar — that's the right place to nail this down. Governor's School "
+            "credit is treated like other transfer/dual-enrollment coursework: it's "
+            "evaluated course-by-course against UTK equivalencies once your official "
+            "transcript is on file, rather than covered by one blanket rule. Where it "
+            "lands depends on the specific course — some Governor's School coursework "
+            "maps directly to a UTK course, and anything without a direct match usually "
+            "posts as general elective credit rather than satisfying a specific "
+            "requirement.\n\nBring your Governor's School transcript (or make sure it's "
+            "been sent officially) to the pre-transfer meeting so we can map it against "
+            "your DARS and see exactly which requirements it can knock out.\n\nBest,\n"
+            "[Advisor name]"
+        ),
+        "checklist": ["Confirm the official Governor's School transcript has been sent to UTK",
+                      "Evaluate each course at the pre-transfer advising meeting for direct UTK equivalencies vs. general elective credit"],
+        "context": {
+            "text": (
+                "Governor's School and other dual-enrollment/transfer coursework is "
+                "evaluated course-by-course for UTK equivalency once an official "
+                "transcript is received. Courses with a direct UTK equivalent post as "
+                "that course; others typically post as general elective credit. This is "
+                "finalized at the pre-transfer advising meeting."
+            ),
+            "link": "https://admissions.utk.edu/undergraduate-application/transfer-information/",
+            "source": "verified knowledge base",
+        },
     },
 
     # ── Linda Carter (parent) — FERPA: must NOT share the student's records ─────
